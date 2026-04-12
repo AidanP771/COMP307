@@ -1,4 +1,5 @@
 const express = require('express');
+const { authenticate } = require('./auth');
 const router = express.Router();
 /**
  * @swagger
@@ -52,8 +53,8 @@ router.get('/active', (req, res) => {
  *       401:
  *         description: Unauthorized
  */
-router.get('/me', (req, res) => {
-  res.status(501).send('user info');
+router.get('/me', authenticate, (req, res) => {
+  res.json(req.user.userId)
 });
 
 
