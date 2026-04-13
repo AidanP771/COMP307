@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
-require('dotenv').config({ path: '../.env' }); 
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 const DUMMY_SECRET_TOKEN = process.env.DUMMY_SECRET_TOKEN;
-
 
  
 function authenticate(req, res, next) {

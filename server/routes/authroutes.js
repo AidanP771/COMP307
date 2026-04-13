@@ -1,11 +1,12 @@
 // ================== AUTH =======================
 // TODO: Implement login and Authorization
 // TODO: Implement bearer token and middleware
+const jwt = require('jsonwebtoken');
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../../.env') });
+const DUMMY_SECRET_TOKEN = process.env.DUMMY_SECRET_TOKEN;
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
-require('dotenv').config({ path: '../.env' }); 
-const DUMMY_SECRET_TOKEN = process.env.DUMMY_SECRET_TOKEN;
 
 /**
  * @swagger
