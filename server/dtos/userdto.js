@@ -1,9 +1,13 @@
 class UserDto {
 
-    constructor(name, email, role) {
-    this.name   = name;
-    this.email  = email;
-    this.role   = role;
+    constructor(dbUser) {
+    this.name   = dbUser.name;
+    this.email  = dbUser.email;
+    this.role   = dbUser.role;
+
+    if(dbUser.public_id!=null){
+        this.public_id = dbUser.public_id;
+    }
   }
 
   static validateUserId(userId){
@@ -13,11 +17,11 @@ class UserDto {
 
   static responseUser(dbUser){
     if (!dbUser) return null;
-    return new UserDto(dbUser.name, dbUser.email, dbUser.role);
+    return new UserDto(dbUser);
 }
  
   static responseUsers(dbUsers) {
-    return dbUsers.map(UserDto.response_user);
+    return dbUsers.map(UserDto.responseUser);
   }
 }
  
