@@ -30,8 +30,8 @@ const DUMMY_SECRET_TOKEN = process.env.DUMMY_SECRET_TOKEN;
  *         description: Invalid credentials
  */
 router.post('/login', (req, res) => {
-   
-   const user = {userId: 12345}
+   //TODO: change harcode user with req
+   const user = {userId: 'u1'}
    const accessToken = jwt.sign(user, DUMMY_SECRET_TOKEN)
    res.json({accessToken: accessToken})
 });

@@ -1,4 +1,5 @@
 const express = require('express');
+const UserController   = require('../controllers/usercontroller');
 const { authenticate } = require('./auth');
 const router = express.Router();
 /**
@@ -36,8 +37,6 @@ router.get('/active', (req, res) => {
  *   get:
  *     summary: Get the authenticated user's profile
  *     tags: [Users]
- *     security:
- *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: User profile
@@ -46,16 +45,13 @@ router.get('/active', (req, res) => {
  *             schema:
  *               type: object
  *               properties:
- *                 userId: { type: string }
  *                 name:   { type: string }
  *                 email:  { type: string }
  *                 role:   { type: string }
  *       401:
  *         description: Unauthorized
  */
-router.get('/me', authenticate, (req, res) => {
-  res.json(req.user.userId)
-});
+router.get('/me',authenticate, UserController.getMe);
 
 
 module.exports = router;
