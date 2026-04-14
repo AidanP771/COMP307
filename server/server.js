@@ -28,14 +28,8 @@ async function startServer() {
 
   app.use(express.static('public'));
 
-  app.use(express.static(path.join(__dirname, 'dist')));
-
-  app.use((req, res) => { // ← ONLY CHANGE (was app.get('*'))
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-  });
-
-  app.listen(3000, () => {
-    console.log('Running on port 3000');
+  app.listen(5000, () => {
+    console.log('Running on port 5000');
   });
 }
 
