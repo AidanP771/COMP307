@@ -1,21 +1,24 @@
 const express = require('express');
+const SlotController   = require('../controllers/slotcontroller');
+const { authenticate } = require('./auth');
 const router = express.Router();
 /**
  * @swagger
- * /owners/{ownerId}/slots:
+ * /{owner_id}/slots:
  *   get:
- *     summary: Get all available (unbooked) slots for a specific owner
- *     tags: [Owner]
+ *     summary: Get all active unbooked slots for a specific owner
+ *     tags: [Slots]
  *     parameters:
  *       - in: path
- *         name: ownerId
+ *         name: owner_id
  *         required: true
  *         schema:
  *           type: string
- *         description: The ID of the owner
+ *         description: The public_id of the owner
+ *         example: 3b185b17-7682-4f9e-990a-a1b415a20822
  *     responses:
  *       200:
- *         description: List of available slots for the owner
+ *         description: List of unbooked active slots for the owner
  *         content:
  *           application/json:
  *             schema:
@@ -25,9 +28,7 @@ const router = express.Router();
  *       404:
  *         description: Owner not found
  */
-router.get('/owners/:ownerId/slots', (req, res) => {
-   res.status(501).send('owner unbook slots');
-});
+router.get('/:owner_id/slots', authenticate, SlotController.getAvailableByOwner);
 
 /**
  * @swagger

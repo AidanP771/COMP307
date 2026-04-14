@@ -95,7 +95,7 @@ const db = {
       start_time: '10:00',
       end_time:   '11:00',
       user_limit: 10,
-      curr_user:  10,     // full
+      curr_user:  10,     
       is_private: false,
       bookingIds: [],
     },

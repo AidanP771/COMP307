@@ -74,20 +74,12 @@ app.get('/', (req, res) => {
  *       properties:
  *         slotId:
  *           type: string
- *         ownerId:
+ *         date:
  *           type: string
- *         title:
+ *         start_time:
  *           type: string
- *         description:
+ *         end_time:
  *           type: string
- *         startTime:
- *           type: string
- *           format: date-time
- *         endTime:
- *           type: string
- *           format: date-time
- *         isBooked:
- *           type: boolean
  *
  *     SlotWithBooking:
  *       allOf:

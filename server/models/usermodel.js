@@ -19,7 +19,13 @@ const UserModel = {
     });
     return combinedActiveOwners;
 
-  }
+  },
+  
+  findOwnerByPublicId(public_id) {
+    const ownerRecord = db.owners.find(o => o.public_id === public_id);
+    if (!ownerRecord) return null;
+    return db.users.find(u => u.userId === ownerRecord.userId && u.role === 'owner') ?? null;
+  },
 
  
 };
