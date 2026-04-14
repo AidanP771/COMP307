@@ -8,7 +8,7 @@ const UserModel = {
   },
 
   getActiveOwners(){
-    const activeOwnerRecords = db.owners.filter(owner => owner.active_slot === true);
+    const activeOwnerRecords = db.owners.filter(owner => owner.has_active_slot === true);
     const combinedActiveOwners = activeOwnerRecords.map(owner => {
     
         const userDetails = db.users.find(user => user.userId === owner.userId);

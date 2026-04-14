@@ -35,6 +35,8 @@ const router = express.Router();
  */
 router.get('/active', authenticate, UserController.getActiveOwners);
 
+
+
 /**
  * @swagger
  * /users/me:
