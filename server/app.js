@@ -82,35 +82,6 @@ app.get('/', (req, res) => {
  *         end_time:
  *           type: string
  *
- *     SlotWithBooking:
- *       allOf:
- *         - $ref: '#/components/schemas/Slot'
- *         - type: object
- *           properties:
- *             bookedBy:
- *               type: object
- *               nullable: true
- *               properties:
- *                 userId:
- *                   type: string
- *                 name:
- *                   type: string
- *                 email:
- *                   type: string
- *
- *     Booking:
- *       type: object
- *       properties:
- *         bookingId:
- *           type: string
- *         slotId:
- *           type: string
- *         userId:
- *           type: string
- *         createdAt:
- *           type: string
- *           format: date-time
- *         slot:
- *           $ref: '#/components/schemas/Slot'
+ *        
  *
  */

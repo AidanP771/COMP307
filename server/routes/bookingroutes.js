@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const BookingController = require('../controllers/bookingcontroller');
+const { authenticate }  = require('./auth');
 /**
  * @swagger
  * /bookings/book:
@@ -36,7 +38,7 @@ router.post('/book', (req, res) => { res.status(501).send("books a slot"); });
  * @swagger
  * /bookings/me:
  *   get:
- *     summary: User retrieves all their bookings
+ *     summary: User retrieves all their bookings (both confirmed and unconfirmed)
  *     tags: [Bookings]
  *     responses:
  *       200:
@@ -50,7 +52,8 @@ router.post('/book', (req, res) => { res.status(501).send("books a slot"); });
  *       403:
  *         description: Forbidden – user role required
  */
-router.get('/me', (req, res) => { res.status(501).send("get all the bookings of a user"); });
+router.get('/me', authenticate, BookingController.getMyBookings);
+
  
 /**
  * @swagger
@@ -73,6 +76,33 @@ router.get('/me', (req, res) => { res.status(501).send("get all the bookings of 
  *         description: Booking not found
  */
 router.delete('/:bookingId', (req, res) => { res.status(501).send("delete a booking"); });
+
+// ================== Swagger Schemas =======================
+
+/**
+ * @swagger
+ * components:
+
+ *   schemas: 
+ *
+ *     Booking:
+ *       type: object
+ *       properties:
+ *         owner_name:
+ *           type: string
+ *         date:
+ *           type: string
+ *         start_time:
+ *           type: string
+ *         end_time:
+ *           type: string
+ *         status:
+ *           type: string
+ *           description: State of the booking. Will be confirmed or unconfirmed
+ *           example: unconfirmed
+ *        
+ *
+ */
 
 
 module.exports = router;
