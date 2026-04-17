@@ -34,7 +34,7 @@ const SlotModel = {
   },
 
 // ================== TO IMPLEMENT =============================
-   create() {
+   async create() {
     return
   },
 
