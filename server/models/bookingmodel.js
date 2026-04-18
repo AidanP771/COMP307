@@ -1,34 +1,69 @@
-const db = require('./dummy_db');
-
+const { getDB } = require('../db');
 const BookingModel = {
   
-   findByUser(userId) {
-    const user = db.users.find(u => u.userId === userId);
-    if (!user) return [];
+async findByUser(userId) {
+	const db = getDB();
 
-    const resolve = (bookingId, status) => {
-      const booking = db.bookings.find(b => b.id === bookingId);
-      if (!booking) return null;
-      const slot  = db.slots.find(s => s.slot_id === booking.slot_id) ?? null;
-      const owner = slot ? db.users.find(u => u.userId === slot.ownerId) ?? null : null;
-      return { ...booking, status, slot, owner };
-    };
+	const user = await db.collection('users').findOne({ userId });
+	if (!user) return [];
+	const resolve = async (bookingId, status) => {
+		const booking = await db.collection('bookings')
+			.findOne({ bookingId: bookingId });
+		if (!booking) return null;
+		const slot = await db.collection('slots')
+			.findOne({ slot_id: Number(booking.slot_id) }) ?? null;
+		const owner = slot
+			? await db.collection('users')
+			.findOne({ userId: slot.ownerId }) ?? null
+			: null;
+		return { ...booking, status, slot, owner };
+	};
+	const confirmed = await Promise.all(
+		(user.bookings_ids ?? []).map(id => resolve(id, 'confirmed'))
+	);
+	const unconfirmed = await Promise.all(
+		(user.request_booking_ids ?? []).map(id => resolve(id, 'unconfirmed'))
+	);
+	return [...confirmed, ...unconfirmed].filter(Boolean);
+},
 
-    const confirmed   = (user.bookings_ids        ?? []).map(id => resolve(id, 'confirmed'));
-    const unconfirmed = (user.request_booking_ids ?? []).map(id => resolve(id, 'unconfirmed'));
+async create({userId, slotId}) {
+	const db = getDB();
+	const newBooking = {
+		bookingId: Date.now(),
+		userId,
+		slot_id: slotId,
+		status: 'confirmed'
+	}
+	await db.collection('bookings').insertOne(newBooking);
 
-    return [...confirmed, ...unconfirmed].filter(Boolean);
-  },
+	await db.collection('users').updateOne(
+		{userId},
+		{ $push: { bookings_ids: newBooking.bookingId } }
+	);
 
+	return newBooking;
+}
 
-// ================== TO IMPLEMENT =============================
-  create() {
-    return;
-  },
+async delete({bookingId, userId}) {
+	const db = getDB();
+	
+	const booking = await db.collection('bookings').findOne({bookingId});
+	if (!booking) return false;
+	await db.collection('bookings').deleteOne({ bookingId });
+	await db.collection('users').updateOne(
+		{ userId },
+		{
+      			$pull: {
+        			bookings_ids: bookingId,
+        			request_booking_ids: bookingId
+      			}
+    		}
+  	);
 
-  delete(bookingId) {
-    return;
-  },
+  	return true;
+},
+
 };
 
 module.exports = BookingModel;
