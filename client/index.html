@@ -1,13 +1,23 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>client</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <title>Welcome to nameTBD</title>
+</head>
+<body style="display: block; text-align: center; padding-top: 100px;">
+    <div class="sidebar-logo-placeholder" style="margin: 0 auto;">M</div>
+    <h1 class="page-title">nameTBD</h1>
+    <p class="page-description">The official McGill SOCS Booking Application.</p>
+    
+    <div style="max-width: 600px; margin: 40px auto; text-align: left; padding: 20px; border: 1px solid #eaeaea; border-radius: 8px;">
+        <h3>Registration & Instructions</h3>
+        <ul style="font-size: 0.9rem; line-height: 1.6;">
+            <li><strong>Login Required:</strong> Only @mcgill.ca or @mail.mcgill.ca users can enter.</li>
+            <li><strong>Owners (@mcgill.ca):</strong> Create and manage private/public slots.</li>
+            <li><strong>Users:</strong> Book active slots and manage appointments.</li>
+        </ul>
+        <button onclick="window.location.href='signin.html'" class="card-action-button">Get Started / Sign In</button>
+    </div>
+</body>
 </html>
