@@ -20,6 +20,25 @@ class ProposalDto {
     return list.map(p => ProposalDto.responseForUser(p, userId));
   }
 
+  static responseForOwner(p) {
+    if (!p) return null;
+    return {
+      proposalId:       p.proposalId,
+      title:            p.title,
+      invitedUsers:     p.invitedUsers,
+      options: p.options.map(o => ({
+        date:       o.date,
+        startTime: o.startTime,
+        endTime:   o.endTime,
+        voteCount: o.votes.length,
+      })),
+    };
+  }
+
+  static responseListForOwner(list) {
+    return list.map(ProposalDto.responseForOwner);
+  }
+
 }
 
 module.exports = ProposalDto;

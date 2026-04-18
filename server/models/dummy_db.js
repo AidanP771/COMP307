@@ -183,7 +183,7 @@ const db = {
 
     {
       proposalId: 'p2',
-      ownerId:    'o2',
+      ownerId:    'o1',
       title: "Exam time",
       userIds:    ['u1'],
       options: [

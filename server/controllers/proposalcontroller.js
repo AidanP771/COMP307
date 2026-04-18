@@ -14,6 +14,12 @@ const ProposalController = {
         
     },
     
+    getOwnerProposals(req, res) {
+        const ownerId = req.user.userId;
+        const proposalList = ProposalModel.findForOwner(ownerId);
+        res.json(ProposalDto.responseListForOwner(proposalList));
+    }
+    
   };
 
 
