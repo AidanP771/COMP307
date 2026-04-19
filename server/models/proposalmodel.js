@@ -1,5 +1,6 @@
 const db = require('./dummy_db');
 const BookingModel = require('./bookingmodel');
+const genId = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
 
 
 const findRaw = (proposalId) =>
@@ -26,6 +27,26 @@ const ProposalModel = {
 
   findForOwner(ownerId){
     return db.proposals.filter(p => p.ownerId === ownerId).map(enrichUser);
+  },
+
+  create(ownerId, title, userIds, options) {
+    const proposal = {
+      proposalId: genId(),
+      ownerId,
+      title,
+      userIds: [...userIds],
+      options: options.map(o => ({
+        optionId:   genId(),
+        date:       o.date,
+        startTime: o.startTime,
+        endTime:   o.endTime,
+        votes:      [],
+      })),
+    };
+    db.proposals.push(proposal);
+    inserted_proposal = db.proposals.find(p => p.proposalId === proposal.proposalId)
+    
+    return enrichUser(inserted_proposal);
   },
 
 };

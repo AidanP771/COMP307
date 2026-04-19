@@ -25,7 +25,7 @@ class ProposalDto {
     return {
       proposalId:       p.proposalId,
       title:            p.title,
-      invitedUsers:     p.invitedUsers,
+      invitedUsers:     p.invitedUsers ?? null,
       options: p.options.map(o => ({
         date:       o.date,
         startTime: o.startTime,

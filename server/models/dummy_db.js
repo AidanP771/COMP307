@@ -6,7 +6,7 @@ const db = {
     { userId: 'o2', name: 'Dave Owner',  email: 'dave@example.com',  pwd: 'password123', role: 'owner', bookingIds: [], requestBookingIds: [] },
     { userId: 'o3', name: 'Eve Owner',   email: 'eve@example.com',   pwd: 'password123', role: 'owner', bookingIds: [], requestBookingIds: [] },
     { userId: 'o4', name: 'Frank Owner', email: 'frank@example.com', pwd: 'password123', role: 'owner', bookingIds: ['b7'], requestBookingIds: [] },
-    { userId: 'o5', name: 'Grace Owner', email: 'grace@example.com', pwd: 'password123', role: 'owner', bookingIds: [], requestBookingIds: [] },
+    { userId: 'u3', name: 'Grace Brunch', email: 'grace@example.com', pwd: 'password123', role: 'user', bookingIds: [], requestBookingIds: [] },
   ],
 
   owners: [

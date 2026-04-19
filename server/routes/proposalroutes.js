@@ -44,6 +44,43 @@ router.get('/me',authenticate, ProposalController.getUserProposals);
  */
 router.get('/owned', authenticate, ProposalController.getOwnerProposals);
 
+
+
+ /** @swagger
+ * /proposals/create:
+ *   post:
+ *     summary: Owner creates a proposal with slot options for a specific list of users
+ *     tags: [Proposals]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: { $ref: '#/components/schemas/ProposalCreateRequest' }
+ *     responses:
+ *       201:
+ *         description: Proposal created
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/ProposalOwnerView' }
+ *       400:
+ *         description: Validation error (missing title, empty userIds/options, unknown user, or option missing date/time fields)
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/Error' }
+ *       401:
+ *         description: Unauthorized – missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/Error' }
+ *       403:
+ *         description: Forbidden – owner role required
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/Error' }
+ */
+router.post('/create', authenticate, ProposalController.create);
+
+
 // --------------- Testing Purpose ---------- TO REMOVE
 router.post('/login', (req, res) => {
    //TODO: change harcode user with req
@@ -105,6 +142,29 @@ router.post('/login', (req, res) => {
  *         options:
  *           type: array
  *           items: { $ref: '#/components/schemas/ProposalOptionOwnerView' }
+ * 
+ *     ProposalCreateRequest:
+ *       type: object
+ *       required: [title, userIds, options]
+ *       properties:
+ *         title:
+ *           type: string
+ *           example: "#345 Final Pick a Time"
+ *         userNames:
+ *           type: array
+ *           description: The specific list of invited users who can see and vote on this proposal.
+ *           minItems: 1
+ *           items: { type: string, example: "u1" }
+ *         options:
+ *           type: array
+ *           minItems: 1
+ *           items:
+ *             type: object
+ *             required: [date, start_time, end_time]
+ *             properties:
+ *               date:       { type: string, example: "2026-05-04" }
+ *               startTime: { type: string, example: "09:00" }
+ *               endTime:   { type: string, example: "10:00" }
  */
 
 
