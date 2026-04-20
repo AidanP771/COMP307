@@ -87,6 +87,24 @@ const ProposalModel = {
     return {...ownerBooking, slot:slot, owner:findUser(slot.ownerId)};
   },
 
+  hasVoted(proposal, userId) {
+    return proposal.options.some(o => o.votes.includes(userId));
+  },
+
+  vote(proposalId, userId, optionIds) {
+    const proposal = findRaw(proposalId);
+    if (!proposal) return { error: 'proposal does not exist' };
+    if (!proposal.userIds.includes(userId))      return { error: 'user is not invited' };
+    if (this.hasVoted(proposal, userId))         return { error: 'already_voted' };
+
+    optionIds.forEach(oid => {
+        const opt = proposal.options.find(o => o.optionId === oid);
+        if (opt && !opt.votes.includes(userId)) opt.votes.push(userId);
+        });
+
+    return {proposal: enrichOwner(proposal)};
+  },
+
 };
 
 const DummyBookingModel = {

@@ -101,7 +101,7 @@ router.post('/create', authenticate, ProposalController.create);
  *           schema: { $ref: '#/components/schemas/ProposalSelectRequest' }
  *     responses:
  *       200:
- *         description: Proposal closed and bookings created for owner and invited users.
+ *         description: Proposal closed and bookings created for owner and invited users Returns the owner's confirmed booking.
  *         content:
  *           application/json:
  *             schema: { $ref: '#/components/schemas/Booking' }
@@ -119,6 +119,37 @@ router.post('/create', authenticate, ProposalController.create);
 router.post('/:proposalId/select', authenticate, ProposalController.select);
 
 
+/**
+ * @swagger
+ * /proposals/{proposalId}/vote:
+ *   post:
+ *     summary: Invited user casts their single vote for one or more options
+ *     description: A user may vote only once per proposal. Subsequent vote requests from the same user are rejected with 400. A user may include multiple optionIds in this single call.
+ *     tags: [Proposals]
+ *     parameters:
+ *       - in: path
+ *         name: proposalId
+ *         required: true
+ *         schema: { type: string }
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: { $ref: '#/components/schemas/ProposalVoteRequest' }
+ *     responses:
+ *       200:
+ *         description: Vote recorded; updated proposal as seen by the user
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/ProposalUserView' }
+ *       400:
+ *         description: Empty optionIds, unknown optionId, or unknown proposal
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/Error' }
+ * 
+ */
+router.post('/:proposalId/vote', authenticate, ProposalController.vote);
 
 
 // --------------- Testing Purpose ---------- TO REMOVE
@@ -213,6 +244,15 @@ router.post('/login', (req, res) => {
  *         optionId:
  *           type: string
  *           example: "p1-opt-a"
+ * 
+ *     ProposalVoteRequest:
+ *       type: object
+ *       required: [optionIds]
+ *       properties:
+ *         optionIds:
+ *           type: array
+ *           description: One or more optionId to vote for.
+ *           items: { type: string, example: "p1-opt-a" }
  *     Error:
  *        type: object
  *        properties:

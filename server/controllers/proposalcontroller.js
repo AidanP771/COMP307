@@ -73,6 +73,20 @@ const ProposalController = {
         res.json(BookingDto.responseBooking(ownerBooking));
     },
 
+    vote(req, res) {
+    const { optionIds } = req.body ?? {};
+    if (!Array.isArray(optionIds) || optionIds.length === 0) {
+      return res.status(400).json({ error: 'optionIds must be a non-empty array' });
+    }
+
+    const result = ProposalModel.vote(req.params.proposalId, req.user.userId, optionIds);
+    if (result.error) return res.status(400).json({ error: result.error });
+    res.json(ProposalDto.responseForUser(result.proposal, req.user.userId));
+  },
+
+
+
+
 
 }
 
