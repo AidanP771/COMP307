@@ -1,12 +1,12 @@
 const db = {
   users: [
-    { userId: 'u1', name: 'Alice Smith', email: 'alice@example.com', pwd: 'password123', role: 'user', bookingIds: ['b1', 'b3'], requestBookingIds: ['b5'] },
-    { userId: 'u2', name: 'Bob Jones',   email: 'bob@example.com',   pwd: 'password123', role: 'user', bookingIds: ['b2', 'b4', 'b6'], requestBookingIds: [] },
-    { userId: 'o1', name: 'Carol Owner', email: 'carol@example.com', pwd: 'password123', role: 'owner', bookingIds: [], requestBookingIds: [] },
-    { userId: 'o2', name: 'Dave Owner',  email: 'dave@example.com',  pwd: 'password123', role: 'owner', bookingIds: [], requestBookingIds: [] },
-    { userId: 'o3', name: 'Eve Owner',   email: 'eve@example.com',   pwd: 'password123', role: 'owner', bookingIds: [], requestBookingIds: [] },
-    { userId: 'o4', name: 'Frank Owner', email: 'frank@example.com', pwd: 'password123', role: 'owner', bookingIds: ['b7'], requestBookingIds: [] },
-    { userId: 'u3', name: 'Grace Brunch', email: 'grace@example.com', pwd: 'password123', role: 'user', bookingIds: [], requestBookingIds: [] },
+    { userId: 'u1', name: 'Alice Smith', email: 'alice@example.com', pwd: 'password123', job: "student",role: 'user', bookingIds: ['b1', 'b3'], requestBookingIds: ['b5'] },
+    { userId: 'u2', name: 'Bob Jones',   email: 'bob@example.com',   pwd: 'password123', job: "student",role: 'user', bookingIds: ['b2', 'b4', 'b6'], requestBookingIds: [] },
+    { userId: 'o1', name: 'Carol Owner', email: 'carol@example.com', pwd: 'password123', job: "teacher",role: 'owner', bookingIds: [], requestBookingIds: [] },
+    { userId: 'o2', name: 'Dave Owner',  email: 'dave@example.com',  pwd: 'password123', job: "teacher",role: 'owner', bookingIds: [], requestBookingIds: [] },
+    { userId: 'o3', name: 'Eve Owner',   email: 'eve@example.com',   pwd: 'password123', job: "teacher",role: 'owner', bookingIds: [], requestBookingIds: [] },
+    { userId: 'o4', name: 'Frank Owner', email: 'frank@example.com', pwd: 'password123', job: "teacher",role: 'owner', bookingIds: ['b7'], requestBookingIds: [] },
+    { userId: 'u3', name: 'Grace Brunch', email: 'grace@example.com', pwd: 'password123', job: "student",role: 'user', bookingIds: [], requestBookingIds: [] },
   ],
 
   owners: [

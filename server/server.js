@@ -12,7 +12,7 @@ const proposalRoutes = require('./routes/proposalroutes');
 // ================== App Config =======================
 
 const hostname = 'winter2026-comp307-group09.cs.mcgill.ca';
-const port = 3000;
+const port = 5000;
 const app = express();
 
 app.use(express.json());
@@ -22,7 +22,6 @@ app.use('/slot', slotRoutes);
 app.use('/booking', bookingRoutes);
 app.use('/auth', authRoutes);
 app.use('/proposal', proposalRoutes);
-
 
 
 // ================== Swagger Config =======================
@@ -62,7 +61,7 @@ app.post('/api/users', async (req, res) => {
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
-  });
+});
 
 // ================== Main =======================
 

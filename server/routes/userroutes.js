@@ -92,4 +92,18 @@ router.get('/me',authenticate, UserController.getMe);
 router.post('/create',  (req, res) => { res.status(501).send("create a user")});
 
 
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       description: Information about a User.
+ *       properties:
+ *         name:   { type: string, example: "Alice Smith" }
+ *         email:       { type: string, example: "alicesmith@mcgill.ca" }
+ *         job:   { type: string, example: "student", description: A job can be a student, a teacher or a TA}
+ */
+
 module.exports = router;

@@ -3,16 +3,11 @@ class UserDto {
     constructor(dbUser) {
     this.name   = dbUser.name;
     this.email  = dbUser.email;
-    this.role   = dbUser.role;
+    this.job   = dbUser.job;
 
     if(dbUser.public_id!=null){
         this.public_id = dbUser.public_id;
     }
-  }
-
-  static validateUserId(userId){
-    // TODO: implement validation
-    return userId;
   }
 
   static responseUser(dbUser){
