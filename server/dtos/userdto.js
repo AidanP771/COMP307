@@ -5,8 +5,8 @@ class UserDto {
     this.email  = dbUser.email;
     this.job   = dbUser.job;
 
-    if(dbUser.public_id!=null){
-        this.public_id = dbUser.public_id;
+    if(dbUser.publicId!=null){
+        this.publicId = dbUser.publicId;
     }
   }
 

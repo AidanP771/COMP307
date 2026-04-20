@@ -11,7 +11,7 @@ const UserModel = {
     const db = getDB();
 
     const activeOwnerRecords = await db.collection('owners')
-      .find({ has_active_slot: true })
+      .find({"activeSlots.0":{ $exists: true }})
       .toArray();
 
     const combinedActiveOwners = [];
@@ -23,11 +23,10 @@ const UserModel = {
       if (userDetails) {
         combinedActiveOwners.push({
           ...userDetails,
-          public_id: owner.public_id
+          publicId: owner.publicId
         });
       }
     }
-
     return combinedActiveOwners;
   },
 

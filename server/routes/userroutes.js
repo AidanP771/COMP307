@@ -6,11 +6,11 @@ const router = express.Router();
  * @swagger
  * user/active:
  *   get:
- *     summary: Get all registered users who have at least one active unbooked slot
+ *     summary: Get all owners who have at least one active slot
  *     tags: [Users]
  *     responses:
  *       200:
- *         description: List of users with active unbooked slots
+ *         description: List of owners with at least one active slot
  *         content:
  *           application/json:
  *             schema:
@@ -24,10 +24,10 @@ const router = express.Router();
  *                   email: 
  *                     type: string
  *                     example: jvibihal@mail.mcgill.ca
- *                   role: 
+ *                   job: 
  *                      type: string
- *                      example: owner
- *                   public_id:
+ *                      example: Professor
+ *                   publicId:
  *                      type: string
  *                      example: 3b185b17-7682-4f9e-990a-a1b415a20822
  *       401:
