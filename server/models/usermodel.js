@@ -1,14 +1,51 @@
 const { getDB } = require('../db');
-const db = require('./dummy_db');
 const genId = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
 
 const UserModel = {
 
+  // =================== HELPER FUNCTIONS =======================
   async findById(userId) {
     const db = getDB();
     return await db.collection('users').findOne({ userId });
   },
 
+  async findByEmail(email) {
+    const db = getDB();
+    if (typeof email !== 'string') return null;
+    const needle = email.trim().toLowerCase();
+    return db.collection('users').findOne({email: needle});
+  },
+
+  async findOwnerByPublicId(public_id) {
+    const db = getDB();
+
+    const ownerRecord = await db.collection('owners')
+      .findOne({ public_id });
+
+    if (!ownerRecord) return null;
+
+    return await db.collection('users')
+      .findOne({ userId: ownerRecord.userId, role: 'owner' }) ?? null;
+  },
+
+  async enrichOwnerName(request){
+    if (!request) return null;
+    owner = await UserModel.findById(request.ownerId);
+    const ownerName = owner.name;
+    return {
+      ...request,
+      ownerName: ownerName
+    };
+  },
+
+  async addMeeting(userId, meetingId){
+    const db = getDB();
+    const update = await db.collection('users').updateOne(
+    { userId:  userId}, 
+    { $addToSet: { requestMeetingIds: meetingId} }
+    )
+  },
+  // =================== MAIN FUNCTIONS =======================
   async getActiveOwners(){
     const db = getDB();
 
@@ -32,25 +69,6 @@ const UserModel = {
     return combinedActiveOwners;
   },
 
-  async findOwnerByPublicId(public_id) {
-    const db = getDB();
-
-    const ownerRecord = await db.collection('owners')
-      .findOne({ public_id });
-
-    if (!ownerRecord) return null;
-
-    return await db.collection('users')
-      .findOne({ userId: ownerRecord.userId, role: 'owner' }) ?? null;
-  },
-
-  async findByEmail(email) {
-    const db = getDB();
-    if (typeof email !== 'string') return null;
-    const needle = email.trim().toLowerCase();
-    return db.collection('users').findOne({email: needle});
-  },
-
   async createUser({ name, email, password, job, role}) {
     const db = getDB();
     const userId = genId();
@@ -62,7 +80,7 @@ const UserModel = {
       role,
       job,
       bookingsIds: [],
-      requestBookingIds: [],
+      requestMeetingIds: [],
     };
     
     await db.collection('users').insertOne(newUser);

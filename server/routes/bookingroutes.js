@@ -92,9 +92,9 @@ router.delete('/:bookingId', (req, res) => { res.status(501).send("delete a book
  *           type: string
  *         date:
  *           type: string
- *         start_time:
+ *         startTime:
  *           type: string
- *         end_time:
+ *         endTime:
  *           type: string
  *         status:
  *           type: string

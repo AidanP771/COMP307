@@ -5,8 +5,8 @@ class BookingDto {
     this.bookingId  = booking.bookingId;
     this.owner_name = booking.owner?.name ?? null;
     this.date       = booking.slot?.date ?? null;
-    this.start_time = booking.slot?.start_time ?? null;
-    this.end_time   = booking.slot?.end_time ?? null;
+    this.startTime = booking.slot?.startTime ?? null;
+    this.endTime   = booking.slot?.endTime ?? null;
     this.status     = booking.status;
   }
 

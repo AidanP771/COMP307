@@ -39,7 +39,7 @@ const ProposalController = {
         return res.status(400).json({ error: 'options must be a non-empty array' });
         }
         const invalidOption = options.some(o => !o?.date || !o?.startTime || !o?.endTime);
-        if (invalidOption) return res.status(400).json({ error: 'each option needs date, start_time, end_time' });
+        if (invalidOption) return res.status(400).json({ error: 'each option needs date, startTime, endTime' });
 
         const unknownUserNames = [];
         const userIds = [];

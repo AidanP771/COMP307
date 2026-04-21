@@ -229,7 +229,7 @@ router.post('/login', (req, res) => {
  *           minItems: 1
  *           items:
  *             type: object
- *             required: [date, start_time, end_time]
+ *             required: [date, startTime, endTime]
  *             properties:
  *               date:       { type: string, example: "2026-05-04" }
  *               startTime: { type: string, example: "09:00" }

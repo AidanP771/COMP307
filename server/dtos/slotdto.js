@@ -2,8 +2,8 @@ class SlotResponseDto {
   constructor(slot) {
     this.public_id   = slot.public_id;
     this.date        = slot.date;
-    this.start_time   = slot.start_time;
-    this.end_time     = slot.end_time;
+    this.startTime   = slot.startTime;
+    this.endTime     = slot.endTime;
   }
  
   static responseSlot(dbSlot){

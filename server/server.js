@@ -8,6 +8,7 @@ const slotRoutes = require('./routes/slotroutes');
 const bookingRoutes = require('./routes/bookingroutes');
 const authRoutes = require('./routes/authroutes');
 const proposalRoutes = require('./routes/proposalroutes');
+const meetingRoutes = require('./routes/meetingroutes')
 
 // ================== App Config =======================
 
@@ -22,6 +23,7 @@ app.use('/slot', slotRoutes);
 app.use('/booking', bookingRoutes);
 app.use('/auth', authRoutes);
 app.use('/proposal', proposalRoutes);
+app.use('/meeting', meetingRoutes);
 
 
 // ================== Swagger Config =======================
