@@ -82,7 +82,7 @@ router.post('/create', authenticate, ProposalController.create);
  * proposal/{proposalId}/select:
  *   post:
  *     summary: Owner selects the option they want to book
- *     description: Closes the proposal, creates a new booking from the chosen option, creates a confirmed booking for the owner, and creates an unconfirmed booking for every invited user.
+ *     description: Closes the proposal, creates a new booking for all invited users and sends the owner a notificaton
  *     tags: [Proposals]
  *     parameters:
  *       - in: path
@@ -96,10 +96,16 @@ router.post('/create', authenticate, ProposalController.create);
  *           schema: { $ref: '#/components/schemas/ProposalSelectRequest' }
  *     responses:
  *       200:
- *         description: Proposal closed and bookings created for invited users. Returns a success message
+ *         description: Proposal closed and bookings created for invited users. Returns a 'url' mailto to send the owner a notification to themselves
  *         content:
  *           application/json:
- *             schema: { $ref: '#/components/schemas/Message' }
+ *             schema:
+ *              type: object
+ *              properties:
+ *                  url:
+ *                      type: string
+ *                      format: uri
+ *                      example:  "mailto:carol@mcgill.ca?subject=New+meeting+request+from+Alice+Smith&body=..."
  *       403:
  *         description: Forbidden – only the proposal's owner may select
  *         content:

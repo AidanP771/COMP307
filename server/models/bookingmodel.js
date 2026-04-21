@@ -45,7 +45,7 @@ async create(userId, ownerId, slotId) {
 		{
 		userId: {$in: [userId, ownerId]},
 		},
-		{ $push: { bookingsIds: bookingId} }
+		{ $push: { bookingIds: bookingId} }
 	);
 
 	return newBooking;

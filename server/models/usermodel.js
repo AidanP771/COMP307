@@ -115,7 +115,7 @@ const UserModel = {
       pwd: password,
       role,
       job,
-      bookingsIds: [],
+      bookingIds: [],
       requestMeetingIds: [],
     };
     

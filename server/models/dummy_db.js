@@ -41,7 +41,7 @@ const db = {
       privateSlots:    [],
     },
   ],
-  // TODO: bookingsIds should be userIds instead maybe
+  // TODO: bookingIds should be userIds instead maybe
   slots: [
     // ── Carol (o1) ──────────────────────────────────────────
     {

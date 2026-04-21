@@ -3,6 +3,7 @@ const ProposalModel = require('../models/proposalmodel');
 const ProposalDto   = require('../dtos/proposaldto');
 const BookingDto   = require('../dtos/bookingdto');
 const UserModel = require('../models/usermodel');
+const EmailService = require('../services/emailservice.js');
 
 // TODO: Move to user Model + Convert to MongoDB
 const findUser = (userId) => db.users.find(u => u.userId === userId) ?? null;
@@ -71,7 +72,15 @@ const ProposalController = {
 
         const accepted = await ProposalModel.select(p.proposalId, optionId);
 
-        res.status(201).json({msg: `Successfully selected option for ${option.date}, ${option.startTime} - ${option.endTime}`});
+        const owner = await UserModel.findById(p.ownerId);
+
+        const to = owner.email;
+        const subject = `New booking for ${accepted.title}`
+        const body = `You have a booking for ${option.date} from ${option.startTime} to ${option.endTime} for ${accepted.title}.\n\n`;
+      
+        const url = EmailService.buildMailto(to, subject, body);
+
+        res.status(201).json({url});
     },
 
     async vote(req, res) {
