@@ -1,11 +1,6 @@
 const express = require('express');
 const ProposalController = require('../controllers/proposalcontroller');
 const { authenticate }   = require('./auth');
-
-const jwt = require('jsonwebtoken');
-const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '../../.env') });
-const DUMMY_SECRET_TOKEN = process.env.DUMMY_SECRET_TOKEN;
 const router = express.Router();
 //TODO: role verification
 
@@ -101,10 +96,10 @@ router.post('/create', authenticate, ProposalController.create);
  *           schema: { $ref: '#/components/schemas/ProposalSelectRequest' }
  *     responses:
  *       200:
- *         description: Proposal closed and bookings created for owner and invited users Returns the owner's confirmed booking.
+ *         description: Proposal closed and bookings created for invited users. Returns a success message
  *         content:
  *           application/json:
- *             schema: { $ref: '#/components/schemas/Booking' }
+ *             schema: { $ref: '#/components/schemas/Message' }
  *       403:
  *         description: Forbidden – only the proposal's owner may select
  *         content:
@@ -151,14 +146,6 @@ router.post('/:proposalId/select', authenticate, ProposalController.select);
  */
 router.post('/:proposalId/vote', authenticate, ProposalController.vote);
 
-
-// --------------- Testing Purpose ---------- TO REMOVE
-router.post('/login', (req, res) => {
-   //TODO: change harcode user with req
-   const user = {userId: 'o1'}
-   const accessToken = jwt.sign(user, DUMMY_SECRET_TOKEN)
-   res.json({accessToken: accessToken})
-});
 
 
 /**
@@ -251,10 +238,16 @@ router.post('/login', (req, res) => {
  *           type: array
  *           description: One or more optionId to vote for.
  *           items: { type: string, example: "p1-opt-a" }
+ * 
  *     Error:
  *        type: object
  *        properties:
  *          error: { type: string }
+ * 
+ *     Message:
+ *        type: object
+ *        properties:
+ *          msg: { type: string }
  */
 
 

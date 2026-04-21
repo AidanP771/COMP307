@@ -29,7 +29,7 @@ async findByUser(userId) {
 	return [...confirmed, ...unconfirmed].filter(Boolean);
 },
 
-async create({userId, ownerId, slotId}) {
+async create(userId, ownerId, slotId) {
 	const db = getDB();
 	const bookingId = genId();
 
@@ -40,16 +40,6 @@ async create({userId, ownerId, slotId}) {
 	}
 
 	await db.collection('bookings').insertOne(newBooking);
-
-
-//    await db.collection("users").updateMany(
-//     { 
-//     userId: { $in: [meeting.userId, meeting.ownerId] } 
-//     },
-//     { 
-//     $pull: { requestMeetingIds: mId } 
-//     });
-	
 
 	await db.collection('users').updateMany(
 		{

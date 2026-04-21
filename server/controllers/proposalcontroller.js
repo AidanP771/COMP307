@@ -2,6 +2,7 @@ const db = require('../models/dummy_db');
 const ProposalModel = require('../models/proposalmodel');
 const ProposalDto   = require('../dtos/proposaldto');
 const BookingDto   = require('../dtos/bookingdto');
+const UserModel = require('../models/usermodel');
 
 // TODO: Move to user Model + Convert to MongoDB
 const findUser = (userId) => db.users.find(u => u.userId === userId) ?? null;
@@ -10,20 +11,20 @@ const findUserByName = (name)  => db.users.find(u => u.name?.toLowerCase() === n
 
 const ProposalController = {
     
-    getUserProposals(req, res) {
+    async getUserProposals(req, res) {
         const userId = req.user.userId;
-        const proposalList = ProposalModel.findForUser(userId);
-        res.json(ProposalDto.responseListForUser(proposalList, userId));
+        const proposalList = await ProposalModel.findForUser(userId);
+        res.status(200).json(ProposalDto.responseListForUser(proposalList, userId));
         
     },
     
-    getOwnerProposals(req, res) {
+    async getOwnerProposals(req, res) {
         const ownerId = req.user.userId;
-        const proposalList = ProposalModel.findForOwner(ownerId);
-        res.json(ProposalDto.responseListForOwner(proposalList));
+        const proposalList = await ProposalModel.findForOwner(ownerId);
+        res.status(200).json(ProposalDto.responseListForOwner(proposalList));
     },
 
-    create(req, res){
+    async create(req, res){
         const ownerId = req.user.userId;
         // TODO: ROLE VERIFICATION IN MIDDLEWARE
         // if (!me || me.role !== 'owner') return res.status(403).json({ error: 'Owner role required' });
@@ -45,7 +46,7 @@ const ProposalController = {
         const userIds = [];
         for (const raw of userNames) {
             if (typeof raw !== 'string') {unknownUserNames.push(raw); continue; }
-            const user = findUserByName(raw.trim());
+            const user = await UserModel.findUserByName(raw.trim());
             if (!user || user.userId === ownerId) unknownUserNames.push(raw);
             else if (!userIds.includes(user.userId)) userIds.push(user.userId);
             // prevent double adding
@@ -53,36 +54,42 @@ const ProposalController = {
         if (unknownUserNames.length) {
         return res.status(400).json({ error: 'Unknown or invalid userNames', userNames: unknownUserNames });
         }
-        const proposal = ProposalModel.create(ownerId, title.trim(), userIds, options);
+        const proposal = await ProposalModel.create(ownerId, title.trim(), userIds, options);
         res.status(201).json(ProposalDto.responseForOwner(proposal));
     },
 
-    select(req, res) {
+    async select(req, res) {
         const { optionId } = req.body ?? {};
         if (!optionId) return res.status(400).json({ error: 'optionId required' });
 
-        const p = ProposalModel.findById(req.params.proposalId);
+        const p = await ProposalModel.findById(req.params.proposalId);
         if (!p) return res.status(404).json({ error: 'Proposal not found' });
         if (p.ownerId !== req.user.userId) return res.status(403).json({ error: 'Only the owner can select' });
 
         const option = p.options.find(opt => opt.optionId === optionId);
         if (!option) return res.status(400).json({ error: 'Invalid optionId' });
 
-        const ownerBooking = ProposalModel.select(p.proposalId, optionId);
+        const accepted = await ProposalModel.select(p.proposalId, optionId);
 
-        res.json(BookingDto.responseBooking(ownerBooking));
+        res.status(201).json({msg: `Successfully selected option for ${option.date}, ${option.startTime} - ${option.endTime}`});
     },
 
-    vote(req, res) {
+    async vote(req, res) {
+  
     const { optionIds } = req.body ?? {};
     if (!Array.isArray(optionIds) || optionIds.length === 0) {
       return res.status(400).json({ error: 'optionIds must be a non-empty array' });
     }
 
-    const result = ProposalModel.vote(req.params.proposalId, req.user.userId, optionIds);
-    if (result.error) return res.status(400).json({ error: result.error });
-    res.json(ProposalDto.responseForUser(result.proposal, req.user.userId));
+    const p = await ProposalModel.findById(req.params.proposalId);
+    if (!p) return res.status(404).json({ error: 'Proposal not found' });
+    if (!p.userIds.includes(req.user.userId)) return res.status(404).json({ error: 'user is not invited' });
+    if (p.options.some(o => o.votes.includes(req.user.userId))) return res.status(404).json({ error: 'already voted' });
+    
+    const proposal = await ProposalModel.vote(req.params.proposalId, req.user.userId, optionIds);
+    res.status(200).json(ProposalDto.responseForUser(proposal, req.user.userId));
   },
+
 
 
 

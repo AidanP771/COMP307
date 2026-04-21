@@ -37,4 +37,13 @@ router.post('/login', (req, res) => {
    res.json({accessToken: accessToken})
 });
 
+
+// // --------------- Testing Purpose ---------- TO REMOVE
+// router.post('/login', (req, res) => {
+//    //TODO: change harcode user with req
+//    const user = {userId: 'o1'}
+//    const accessToken = jwt.sign(user, DUMMY_SECRET_TOKEN)
+//    res.json({accessToken: accessToken})
+// });
+
 module.exports = router;

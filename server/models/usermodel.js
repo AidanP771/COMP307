@@ -76,6 +76,11 @@ const UserModel = {
       ...request, userEmail: user.email
     }
   },
+
+  async findUserByName(name){
+  const db = getDB();
+  return await db.collection('users').findOne({ name: { $regex: `^${name.trim()}$`, $options: 'i' } }) ?? null;
+  },
   // =================== MAIN FUNCTIONS =======================
   async getActiveOwners(){
     const db = getDB();
