@@ -16,6 +16,7 @@ class MeetingDto {
   static responseForOwner(r) {
     if (!r) return null;
     return {
+      meetingId: r.meetingId,
       userName:  r.userName,
       title: r.title,
       message:    r.message,
