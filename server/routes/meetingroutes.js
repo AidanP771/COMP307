@@ -46,6 +46,17 @@ const router = express.Router();
  */
 router.post('/create', authenticate, meetingController.create);
 
+/**
+ * @swagger
+ * meeting/me:
+ *   get:
+ *     summary: A user/owner will view their meeting requests. The user sees the requests they sent. An owner sees the requests they received 
+ *     tags: [Meeting]
+ *     responses:
+ *       200: 
+ *          description: List of the caller's requests
+ */
+router.get('/me', authenticate, meetingController.getMe);
 
 
 /**

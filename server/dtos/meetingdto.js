@@ -17,14 +17,25 @@ class MeetingDto {
     if (!r) return null;
     return {
       userName:  r.userName,
+      title: r.title,
       message:    r.message,
       date:       r.date,
       startTime: r.startTime,
       endTime:   r.endTime,
-      title: r.title,
-      message: r.message,
     };
   }
+
+
+  static responseListForOwner(list) {
+    if(!list) return null;
+    return list.map(MeetingDto.responseForOwner);
+  }
+
+  static responseListForUser(list){
+    if(!list) return null;
+    return list.map(MeetingDto.responseForUser);
+  }
 }
+
 
 module.exports = MeetingDto;

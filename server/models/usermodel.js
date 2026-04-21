@@ -38,6 +38,29 @@ const UserModel = {
     };
   },
 
+  async enrichUserName(request){
+    if (!request) return null;
+    user = await UserModel.findById(request.userId);
+    const userName = user.name;
+    return {
+      ...request,
+      userName: userName
+    };
+  },
+
+  async enrichListOwnerName(list) {
+    
+    if (!list) return null;
+    enrichedList = await Promise.all(list.map(UserModel.enrichOwnerName));
+    return enrichedList;
+  },
+
+  async enrishListUserName(list) {
+    if (!list) return null;
+    enrichedList = await Promise.all(list.map(UserModel.enrichUserName));
+    return enrichedList;
+  },
+
   async addMeeting(userId, meetingId){
     const db = getDB();
     const update = await db.collection('users').updateOne(

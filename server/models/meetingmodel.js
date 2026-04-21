@@ -5,7 +5,7 @@ const BookingModel  = require('./bookingmodel');
 const UserModel = require('./usermodel');
 
 
-const MeetingRequestModel = {
+const MeetingModel = {
 
   async create(userId, ownerId, message, title, date, startTime, endTime) {
     const db = getDB();
@@ -28,7 +28,14 @@ const MeetingRequestModel = {
     return meeting;
   },
 
+  async getMeetings(meetingIds){
+    const db = getDB();
+    const meetings = db.collection('meetings').find({
+        meetingId: {$in: meetingIds}
+    }).toArray();
+    return meetings
+  }
  
 };
 
-module.exports = MeetingRequestModel;
+module.exports = MeetingModel;

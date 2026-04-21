@@ -42,6 +42,26 @@ const MeetingRequestController = {
   },
 
 
+  async getMe(req, res) {
+    const user = await UserModel.findById(req.user.userId);
+
+    meetingIds = user.requestMeetingIds
+  
+    meetings = await MeetingModel.getMeetings(meetingIds);
+
+    if (user.role === "user") {
+      
+      enrichedMeetings = await UserModel.enrichListOwnerName(meetings)
+      res.status(200).json(MeetingDto.responseListForUser(enrichedMeetings))
+    };
+    
+    if (user.role ==="owner") { 
+      enrichedMeetings = await UserModel.enrishListUserName(meetings)
+      res.status(200).json(MeetingDto.responseListForOwner(enrichedMeetings))
+    };
+  },
+
+
 
 };
 
