@@ -7,21 +7,17 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// Sidebar navigation
 document.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
     if (target.classList.contains('sidebar-link')) {
         e.preventDefault();
 
-        // Remove active class from all links
         document.querySelectorAll('.sidebar-link').forEach(link => {
             link.classList.remove('active');
         });
 
-        // Add active class to clicked link
         target.classList.add('active');
 
-        // Handle navigation
         const section = target.textContent?.trim();
         switch (section) {
             case 'My Dashboard':
@@ -176,7 +172,6 @@ function openNewSlotModal() {
 
     document.body.appendChild(modal);
 
-    // Event listeners
     const closeBtn = modal.querySelector('#close-modal') as HTMLElement;
     const cancelBtn = modal.querySelector('#cancel-slot') as HTMLElement;
     const form = modal.querySelector('#slot-form') as HTMLFormElement;
@@ -205,7 +200,6 @@ async function handleSlotCreation(form: HTMLFormElement, modal: HTMLElement) {
     }
 
     try {
-        // For now, just show a success message since the backend slot creation isn't implemented
         alert(`Private slot "${title}" created successfully!\nDate: ${date}\nTime: ${startTime} - ${endTime}`);
         modal.remove();
     } catch (error) {
