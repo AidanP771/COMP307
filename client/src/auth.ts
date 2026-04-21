@@ -1,0 +1,24 @@
+const loginForm = document.querySelector('form');
+
+loginForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const emailInput = document.getElementById('email') as HTMLInputElement;
+    const email = emailInput.value.trim().toLowerCase();
+
+    // REGEX: Only @mcgill.ca or @mail.mcgill.ca
+    const mcgillRegex = /^[a-z0-9.]+@(?:mail\.)?mcgill\.ca$/;
+
+    if (!mcgillRegex.test(email)) {
+        alert("Access Denied: You must use a valid McGill email address.");
+        return;
+    }
+
+    // owners are @mcgill.ca (no 'mail.')
+    const isOwner = email.endsWith('@mcgill.ca') && !email.includes('@mail.');
+    
+    // TEMPORARY!!!!!!!!!!!!!!!!!!!!!!!! todo: fit later with backend auth 
+    localStorage.setItem('userEmail', email);
+    localStorage.setItem('userRole', isOwner ? 'owner' : 'user');
+
+    window.location.href = isOwner ? 'prof_dash.html' : 'main.html';
+});
