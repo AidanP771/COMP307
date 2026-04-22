@@ -4,6 +4,7 @@ loginForm?.addEventListener('submit', (e) => {
     e.preventDefault();
     const emailInput = document.getElementById('email') as HTMLInputElement;
     const email = emailInput.value.trim().toLowerCase();
+    const password = (document.getElementById('password') as HTMLInputElement).value;
 
     // REGEX: Only @mcgill.ca or @mail.mcgill.ca
     const mcgillRegex = /^[a-z0-9.]+@(?:mail\.)?mcgill\.ca$/;
@@ -16,9 +17,27 @@ loginForm?.addEventListener('submit', (e) => {
     // owners are @mcgill.ca (no 'mail.')
     const isOwner = email.endsWith('@mcgill.ca') && !email.includes('@mail.');
     
-    // TEMPORARY!!!!!!!!!!!!!!!!!!!!!!!! todo: fit later with backend auth 
-    localStorage.setItem('userEmail', email);
-    localStorage.setItem('userRole', isOwner ? 'owner' : 'user');
 
-    window.location.href = isOwner ? 'prof_dash.html' : 'main.html';
+    try {
+        const res = await fetch('/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+
+        if (!res.ok) throw new Error('Login failed');
+
+        const data = await res.json();
+
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userId', data.userId);
+        localStorage.setItem('userEmail', email);
+        localStorage.setItem('userRole', isOwner ? 'owner' : 'user');
+
+        window.location.href = isOwner ? 'prof_dash.html' : 'main.html';
+
+    } catch (err) {
+        console.error(err);
+        alert("Login failed");
+    }
 });

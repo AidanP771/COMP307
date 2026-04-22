@@ -14,13 +14,15 @@ const SlotController = {
   },
 
   async create(req, res) {
+
     const ownerId = req.user.userId;
-    if (req.user.role !== 'owner') {
+    const owner = await UserModel.findById(ownerId);
+    if (owner.role !== "owner") {
       return res.status(403).json({ error: 'Owner role required' });
     }
 
     const errors = [];
-    const { date, startTime, endTime, title } = body ?? {};
+    const { date, startTime, endTime, title } = req.body ?? {};
     if (typeof title !== 'string' || title.trim() === '') errors.push('title is required');
     if (typeof date !== 'string' || date.trim() === '') errors.push('date is required');
     if (typeof startTime !== 'string' || startTime.trim() === '') errors.push('startTime is required');

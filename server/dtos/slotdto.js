@@ -1,6 +1,6 @@
 class SlotResponseDto {
   constructor(slot) {
-    this.public_id   = slot.public_id;
+    this.title   = slot.title;
     this.date        = slot.date;
     this.startTime   = slot.startTime;
     this.endTime     = slot.endTime;
