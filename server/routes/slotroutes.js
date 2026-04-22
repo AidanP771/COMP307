@@ -91,7 +91,7 @@ router.put('/activate', authenticate, SlotController.activate);
  * @swagger
  * slot/{ownerId}:
  *   get:
- *     summary: A user can find all active unbooked slots for a specific owner
+ *     summary: A user can find all active  && unbooked slots for a specific owner
  *     tags: [Slots]
  *     parameters:
  *       - in: path
@@ -120,7 +120,7 @@ router.get('/:ownerId', SlotController.getAvailableByOwner);
  * @swagger
  * slot/{slotId}:
  *   delete:
- *     summary: Owner deletes a slot. If a user had booked it, a mailto notification URL is returned.
+ *     summary: Owner deletes a slot. If a/many user(s) had booked it, a mailto notification URL is returned.
  *     tags: [Slots]
  *     parameters:
  *       - in: path
@@ -134,60 +134,42 @@ router.get('/:ownerId', SlotController.getAvailableByOwner);
  */
 router.delete('/:slotId', authenticate, SlotController.deleteSlot);
 
-// /**
-//  * @swagger
-//  * /slot/{slotId}:
-//  *   delete:
-//  *     summary: Owner deletes a booking slot
-//  *     tags: [Slots]
-//  *     parameters:
-//  *       - in: path
-//  *         name: slotId
-//  *         required: true
-//  *         schema:
-//  *           type: string
-//  *     responses:
-//  *       200:
-//  *         description: Slot deleted successfully
-//  *       403:
-//  *         description: Forbidden – owner role required
-//  *       404:
-//  *         description: Slot not found
-//  */
-// router.delete('/slots/:slotId', (req, res) => { res.status(501).send("delete a slot"); });
+/**
+ * @swagger
+ * slot/{slotId}/book:
+ *   post:
+ *     summary: Authenticated user or owner books another owner's active unbooked slot
+ *     tags: [Slots]
+ *     parameters:
+ *       - in: path
+ *         name: slotId
+ *         required: true
+ *         schema: { type: string }
+ *     responses:
+ *       201: { description: Slot booked successfully. Returns a bookingId, a slot object and a url. The url is a mailto url to notify the owner of the slot }
+ *       400: { description: Already booked or booking your own slot }
+ *       403: { description: Slot is private }
+ *       404: { description: Slot not found }
+ */
+router.post('/:slotId/book', authenticate, SlotController.book);
 
-// /**
-//  * @swagger
-//  * /slots/{slotId}/email:
-//  *   post:
-//  *     summary: Owner sends an email to the user who booked a slot
-//  *     tags: [Slots]
-//  *     parameters:
-//  *       - in: path
-//  *         name: slotId
-//  *         required: true
-//  *         schema:
-//  *           type: string
-//  *     requestBody:
-//  *       required: true
-//  *       content:
-//  *         routerlication/json:
-//  *           schema:
-//  *             type: object
-//  *             required: [subject, body]
-//  *             properties:
-//  *               subject:
-//  *                 type: string
-//  *               body:
-//  *                 type: string
-//  *     responses:
-//  *       200:
-//  *         description: Email sent successfully
-//  *       403:
-//  *         description: Forbidden – owner role required
-//  *       404:
-//  *         description: Slot not found or no booking exists for this slot
-//  */
-// router.post('/slots/:slotId/email', (req, res) => { res.status(501).send("owner send email to user"); });
+/**
+ * @swagger
+ * slot/{slotId}/email:
+ *   post:
+ *     summary: Used for an Authenticated user to composes an email to the owner of a slot. Returns a mailto URL with the to field addressed to the owner.
+ *     tags: [Slots]
+ *     parameters:
+ *       - in: path
+ *         name: slotId
+ *         required: true
+ *         schema: { type: string }
+ *     responses:
+ *       200:
+ *         description: A "url" mailto URL string addressed to the slot's owner.
+ *       404: { description: Slot or owner not found }
+ */
+router.post('/:slotId/email', authenticate, SlotController.emailOwner);
+
 
 module.exports = router;

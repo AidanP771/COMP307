@@ -72,7 +72,6 @@ async setActive(slotId) {
   },
 
 
-
   async delete(slotId) {
     const db = getDB();
     const slot = await db.collection('slots').findOne({ slotId });
@@ -85,6 +84,25 @@ async setActive(slotId) {
     );
 
     return slot;
+  },
+
+  async book(slotId, userId) {
+    const db = getDB();
+    const slot = await db.collection('slots').findOne({ slotId });
+    if (!slot) return null;
+
+    const bookingId = genId();
+    const booking = { bookingId, userId, slotId };
+    await db.collection('bookings').insertOne(booking);
+    await db.collection('slots').updateOne(
+      { slotId },
+      { $set: { isBooked: true } }
+    );
+    await db.collection('users').updateMany(
+      { userId: { $in: [userId, slot.ownerId] } },
+      { $push: { bookingIds: bookingId } }
+    );
+    return booking;
   },
 
 };

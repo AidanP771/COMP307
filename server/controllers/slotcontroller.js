@@ -96,7 +96,41 @@ const SlotController = {
     res.status(200).json({url});
   },
 
+  async book(req, res) {
+
+    const bookerId = req.user.userId;
+    const slot = await SlotModel.findById(req.params.slotId);
+    if (!slot) return res.status(404).json({ error: 'Slot not found' });
+    if (slot.isPrivate) return res.status(403).json({ error: 'Slot is not active' });
+    if (slot.isBooked) return res.status(400).json({ error: 'Slot is already booked' });
+    if (slot.ownerId === bookerId) return res.status(400).json({ error: 'Cannot book your own slot' });
+
+    const booking = await SlotModel.book(slot.slotId, bookerId);
+
+    const owner = await UserModel.findById(slot.ownerId);
+
+    const to = owner.email;
+    const subject = `New booking for ${slot.title}`
+    const body = `You have a booking for ${slot.date} from ${slot.startTime} to ${slot.endTime} for ${slot.title}.\n\n`;
   
+    const url = EmailService.buildMailto(to, subject, body);
+
+    res.status(201).json({
+      bookingId: booking.bookingId,
+      slot: SlotDto.responseSlot({...slot, isBooked: true}),
+      url,
+    });
+  },
+
+  async emailOwner(req, res) {
+    const slot = await SlotModel.findById(req.params.slotId);
+    if (!slot) return res.status(404).json({ error: 'Slot not found' });
+
+    const owner = await UserModel.findById(slot.ownerId);
+
+    const url = EmailService.buildMailto(owner.email, "", "");
+    res.status(200).json(url);
+  },
 };
 
 module.exports = SlotController;
