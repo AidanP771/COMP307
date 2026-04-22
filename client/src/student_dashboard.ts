@@ -18,6 +18,13 @@ interface Appointment {
   status: string;
 }
 
+const PROFESSOR_EMAILS: Record<string, string> = {
+  'Dr. Guilia Alberini': 'guilia.alberini@mcgill.ca',
+  'Dr. Jackie Chen': 'jackie.chen@mcgill.ca',
+  'Dr. Jeremy MacDonald': 'j.macdonald@mcgill.ca',
+  'Dr. Djivede Kelome': 'd.kelome@mcgill.ca',
+};
+
 // --- Init ---
 
 export function initializeStudentDashboard() {
@@ -183,9 +190,20 @@ async function handleBookingSubmit(form: HTMLFormElement, professorName: string,
   }
 
   try {
+    const userId = localStorage.getItem('userId') || '';
+    const ownerEmail = PROFESSOR_EMAILS[professorName.trim()];
+    if (!userId) {
+      alert('Could not determine signed-in user. Please sign in again.');
+      return;
+    }
+    if (!ownerEmail) {
+      alert('Could not determine professor email. Please choose another card.');
+      return;
+    }
+
     const bookingData = {
-	     userId: localStorage.getItem('userId') || 'u1',
-	     ownerId: professorName,
+	     userId,
+	     ownerEmail,
 	     message: notes,
 	     title: 'Office Hours (test)',
 	     date: date,
@@ -193,7 +211,7 @@ async function handleBookingSubmit(form: HTMLFormElement, professorName: string,
 	     endTime: time,
     };
 
-    await apiCall('/meeting/create', {
+    await apiCall(`/meeting/${userId}/create`, {
       method: 'POST',
       body: JSON.stringify(bookingData),
     });

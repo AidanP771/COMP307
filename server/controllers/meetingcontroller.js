@@ -9,12 +9,20 @@ const MeetingRequestController = {
   
   async create(req, res) {
 
-    const me = await UserModel.findById(req.params.userId);
+    const pathUserId = req.params.userId;
+    const bodyUserId = req.body?.userId;
+    const me = await UserModel.findById(pathUserId || bodyUserId);
+    if (!me) return res.status(404).json({ error: 'User not found' });
 
     // ========== VALIDATION ================
-    const { ownerEmail,title, message, date, startTime, endTime } = req.body ?? {};
+    const { ownerEmail, ownerId, title, message, date, startTime, endTime } = req.body ?? {};
     const errors = [];
-    if (typeof ownerEmail !== 'string' || !ownerEmail.trim()) errors.push('ownerEmail is required');
+    if (
+      (typeof ownerEmail !== 'string' || !ownerEmail.trim()) &&
+      (typeof ownerId !== 'string' || !ownerId.trim())
+    ) {
+      errors.push('ownerEmail or ownerId is required');
+    }
     if (typeof title !== 'string' || !title.trim()) errors.push('title is required');
     if (typeof message    !== 'string' || !message.trim())    errors.push('message is required');
     if (typeof date       !== 'string' || !date)              errors.push('date is required');
@@ -22,7 +30,13 @@ const MeetingRequestController = {
     if (typeof endTime   !== 'string' || !endTime)          errors.push('endTime is required');
     if (errors.length) return res.status(400).json({ errors });
 
-    const owner = await UserModel.findByEmail(ownerEmail.trim());
+    let owner = null;
+    if (typeof ownerEmail === 'string' && ownerEmail.trim()) {
+      owner = await UserModel.findByEmail(ownerEmail.trim());
+    } else if (typeof ownerId === 'string' && ownerId.trim()) {
+      owner = await UserModel.findById(ownerId.trim());
+    }
+
     if (!owner || owner.role !== 'owner') return res.status(404).json({ error: 'Owner not found' });
     if (owner.userId === me.userId)       return res.status(400).json({ error: 'Cannot request a meeting with yourself' });
 

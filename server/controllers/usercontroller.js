@@ -62,7 +62,7 @@ const UserController = {
   
   async login(req, res){
     const userEmail = req.body.email
-    const userPwd = req.body.pwd
+    const userPwd = req.body.pwd ?? req.body.password
 
     if(typeof userEmail !== 'string' || userEmail.trim() === '') {
       return res.status(400).json("Must include email")
@@ -72,6 +72,7 @@ const UserController = {
     }
     
     const user = await UserModel.findByEmail(userEmail)
+    if (!user) return res.status(401).json("Invalid Credentials")
 
     if(user.pwd !== userPwd) return res.status(401).json("Invalid Credentials")
     

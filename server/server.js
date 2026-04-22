@@ -2,7 +2,7 @@ const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 const path = require('path')
-const { connectDB, getDB } = require('./db');
+const { connectDB, getDB, closeDB } = require('./db');
 const userRoutes = require('./routes/userroutes');
 const slotRoutes = require('./routes/slotroutes');
 const bookingRoutes = require('./routes/bookingroutes');
@@ -12,9 +12,12 @@ const meetingRoutes = require('./routes/meetingroutes')
 
 // ================== App Config =======================
 
-const hostname = 'winter2026-comp307-group09.cs.mcgill.ca';
-const port = 5000;
+const hostname = process.env.HOST || '0.0.0.0';
+const port = Number(process.env.PORT || 5000);
+const publicBaseUrl = process.env.PUBLIC_BASE_URL || `http://localhost:${port}`;
 const app = express();
+let server;
+let shuttingDown = false;
 
 app.use(express.json());
 
@@ -70,12 +73,37 @@ app.post('/api/users', async (req, res) => {
 async function startServer() {
   await connectDB();
 
-  app.listen(port, () => {
+  server = app.listen(port, () => {
     console.log(`Running on port ${port}`);
-    console.log(`Server running at http://${hostname}:${port}/`);
-    console.log(`Docs available at http://${hostname}:${port}/api-docs`);
+    console.log(`Server bound at http://${hostname}:${port}/`);
+    console.log(`Public base URL: ${publicBaseUrl}`);
+    console.log(`Docs available at ${publicBaseUrl}/api-docs`);
   });
 
 }
 
 startServer();
+
+async function gracefulShutdown(signal) {
+  if (shuttingDown) return;
+  shuttingDown = true;
+
+  console.log(`Received ${signal}. Shutting down gracefully...`);
+
+  try {
+    if (server) {
+      await new Promise((resolve, reject) => {
+        server.close((err) => (err ? reject(err) : resolve()));
+      });
+    }
+    await closeDB();
+    console.log('Shutdown complete.');
+    process.exit(0);
+  } catch (err) {
+    console.error('Error during shutdown:', err);
+    process.exit(1);
+  }
+}
+
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));

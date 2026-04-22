@@ -45,6 +45,7 @@ const router = express.Router();
  *       404: { description: Owner not found }
  */
 router.post('/:userId/create', meetingController.create);
+router.post('/create', meetingController.create);
 
 /**
  * @swagger
@@ -129,7 +130,7 @@ router.post('/:userId/:meetingId/decline', meetingController.decline);
  *              schema: { $ref: '#/components/schemas/Error' }
  *              
  */
-router.post('/:userId/:requestId/accept', meetingController.accept);
+router.post('/:userId/:meetingId/accept', meetingController.accept);
 
 
 /**

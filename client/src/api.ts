@@ -54,42 +54,41 @@ export const auth = {
 
 // User Endpoints
 export const users = {
-  getAll: () => apiCall('/users', { method: 'GET' }),
-  getById: (id: string) => apiCall(`/users/${id}`, { method: 'GET' }),
+  getAll: () => apiCall('/user/active', { method: 'GET' }),
+  getById: (id: string) => apiCall(`/user/${id}`, { method: 'GET' }),
   create: (data: any) =>
-    apiCall('/users', {
+    apiCall('/user/create', {
       method: 'POST',
       body: JSON.stringify(data),
     }),
   update: (id: string, data: any) =>
-    apiCall(`/users/${id}`, {
+    apiCall(`/user/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
     }),
   delete: (id: string) =>
-    apiCall(`/users/${id}`, { method: 'DELETE' }),
+    apiCall(`/user/${id}`, { method: 'DELETE' }),
 };
 
 // Booking Endpoints
 export const bookings = {
-  getAll: () => apiCall('/bookings', { method: 'GET' }),
-  getById: (id: string) => apiCall(`/bookings/${id}`, { method: 'GET' }),
-  getMyBookings: () => apiCall('/bookings/me', { method: 'GET' }),
+  getAll: (userId: string) => apiCall(`/booking/${userId}`, { method: 'GET' }),
+  getById: (id: string) => apiCall(`/booking/${id}`, { method: 'GET' }),
+  getMyBookings: (userId: string) => apiCall(`/booking/${userId}`, { method: 'GET' }),
   create: (data: any) =>
-    apiCall('/bookings', {
+    apiCall('/booking', {
       method: 'POST',
       body: JSON.stringify(data),
     }),
   book: (slotId: string) =>
-    apiCall('/bookings/book', {
+    apiCall(`/slot/${localStorage.getItem('userId') || ''}/${slotId}/book`, {
       method: 'POST',
-      body: JSON.stringify({ slotId }),
     }),
   update: (id: string, data: any) =>
-    apiCall(`/bookings/${id}`, {
+    apiCall(`/booking/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
     }),
   delete: (id: string) =>
-    apiCall(`/bookings/${id}`, { method: 'DELETE' }),
+    apiCall(`/booking/${id}`, { method: 'DELETE' }),
 };
