@@ -1,6 +1,6 @@
 const loginForm = document.querySelector('form');
 
-loginForm?.addEventListener('submit', (e) => {
+loginForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const emailInput = document.getElementById('email') as HTMLInputElement;
     const email = emailInput.value.trim().toLowerCase();

@@ -1,6 +1,8 @@
 const SlotModel    = require('../models/slotmodel');
 const UserModel    = require('../models/usermodel');
+const BookingModel = require('../models/bookingmodel');
 const SlotDto = require('../dtos/slotdto');
+const EmailService = require('../services/emailservice');
 
 const SlotController = {
 
@@ -32,6 +34,22 @@ const SlotController = {
 
     const slot = await SlotModel.create(ownerId, date, startTime, endTime, title, false, true); // isBooked = false, isPrivate = true
     res.status(201).json(SlotDto.responseSlot(slot));
+  },
+
+  async getOwned(req, res) {
+
+    const ownerId = req.user.userId;
+    const owner = await UserModel.findById(ownerId);
+
+    if (owner.role !== 'owner') {
+      return res.status(403).json({ error: 'Owner role required' });
+    }
+
+    const slots = await SlotModel.getAllSlots(ownerId);
+    const bookingIds = await UserModel.getAllBookingIds(ownerId);
+    const bookings = await BookingModel.getListBooking(bookingIds);
+    
+    res.status(200).json(SlotDto.responseSlotsAndBooking(slots, bookings));
   },
 };
 

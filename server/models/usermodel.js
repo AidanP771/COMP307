@@ -81,6 +81,12 @@ const UserModel = {
   const db = getDB();
   return await db.collection('users').findOne({ name: { $regex: `^${name.trim()}$`, $options: 'i' } }) ?? null;
   },
+
+  async getAllBookingIds(userId) {
+    const db = getDB();
+    const user = await db.collection('users').findOne({ userId });
+    return user?.bookingIds ?? [];
+  },
   // =================== MAIN FUNCTIONS =======================
   async getActiveOwners(){
     const db = getDB();

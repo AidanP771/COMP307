@@ -29,7 +29,39 @@ const router = express.Router();
  */
 router.post('/create', authenticate, SlotController.create);
 
-
+/**
+ * @swagger
+ * slot/owned:
+ *   get:
+ *     summary: Owner retrieves all their slots (private + active); each slot includes its booking (if any).
+ *     tags: [Slots]
+ *     responses:
+ *       200:
+ *         description: List of all slots owned by the authenticated owner, with a `bookings` field attached where users have booked the slot.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   title:     { type: string }
+ *                   date:      { type: string }
+ *                   startTime: { type: string }
+ *                   endTime:   { type: string }
+ *                   isPrivate: { type: boolean }
+ *                   isBooked:  { type: boolean }
+ *                   bookings:
+ *                      type: array
+ *                      items:
+ *                          type: object
+ *                          properties:
+ *                              bookingId: { type: string }
+ *                              userName:  { type: string, description: Name of the user who booked this slot }
+ *                              userEmail: { type: string, description: Email of the user who booked this slot }
+ *       403: { description: Forbidden – owner role required }
+ */
+router.get('/owned', authenticate, SlotController.getOwned);
 
 
 /**

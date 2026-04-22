@@ -70,6 +70,24 @@ async delete({bookingId, userId}) {
   	return true;
 },
 
+
+async getListBooking(bookingIds) {
+	const db = getDB();
+	if (!Array.isArray(bookingIds) || bookingIds.length === 0) return [];
+
+	const bookings = await db.collection('bookings')
+		.find({ bookingId: { $in: bookingIds } })
+		.toArray();
+
+	return Promise.all(bookings.map(async (booking) => {
+		const user = await db.collection('users').findOne({ userId: booking.userId });
+		return {
+			...booking,
+			userName:  user?.name  ?? null,
+			userEmail: user?.email ?? null,
+		};
+	}));
+},
 };
 
 module.exports = BookingModel;

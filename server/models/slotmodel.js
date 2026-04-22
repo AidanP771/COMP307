@@ -32,6 +32,11 @@ const SlotModel = {
       .toArray();
   },
 
+   async getAllSlots(ownerId) {
+    const db = getDB();
+    return await db.collection('slots').find({ ownerId }).toArray();
+  },
+
 
   async create(ownerId, date, startTime, endTime, title, isBooked, isPrivate) {
     const db = getDB();
@@ -56,6 +61,8 @@ const SlotModel = {
     
     return newSlot
   },
+
+
 // ================== TO IMPLEMENT =============================
   update(slotId) {
     return

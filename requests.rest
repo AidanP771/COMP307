@@ -160,3 +160,51 @@ Content-Type: application/json
   "startTime" : "9:00",
   "endTime"   : "13:00"
 }
+
+###
+
+GET {{baseUrl}}/slot/owned
+Authorization: Bearer {{ownerAccessToken}}
+Content-Type: application/json
+
+
+// ======= EXAMPLE RETURN ========
+# [
+#   {
+#     "title": "TEST DEMO",
+#     "date": "2026-06-20",
+#     "startTime": "11:00",
+#     "endTime": "12:30",
+#     "isPrivate": true,
+#     "isBooked": true,
+#     "bookings": []
+#   },
+#   {
+#     "title": "770 Final",
+#     "date": "2026-05-04",
+#     "startTime": "09:00",
+#     "endTime": "11:00",
+#     "isPrivate": true,
+#     "isBooked": true,
+#     "bookings": [
+#       {
+#         "bookingId": "0gba0q4umo94y5n3",
+#         "userName": "Alice Smith",
+#         "userEmail": "alice@example.com"
+#       },
+#       {
+#         "bookingId": "v09bwpkjmo94y5n3",
+#         "userName": "Bob Jones",
+#         "userEmail": "bob@example.com"
+#       },
+#       {
+#         "bookingId": "8kz7f2k0mo94y5n3",
+#         "userName": "Grace Brunch",
+#         "userEmail": "grace@example.com"
+#       }
+#     ]
+#   }
+# ]
+
+
+###
