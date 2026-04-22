@@ -235,16 +235,15 @@ POST {{baseUrl}}/slot/{{emailSlotId}}/email
 Authorization: Bearer {{accessToken}}
 
 ###
-GET {{baseUrl}}/booking/me
-Authorization: Bearer {{accessToken}}
+GET {{baseUrl}}/booking/u1
 
 ###
 @deleteBooking = v5r1aw5emoa4f2b5
 
-DELETE {{baseUrl}}/booking/{{deleteBooking}}
-Authorization: Bearer {{accessToken}}
+DELETE {{baseUrl}}/booking/u1/{{deleteBooking}}
+
 
 ### 
 @emailBooking = p0koz4f1moa48dxm
-POST {{baseUrl}}/booking/{{emailBooking}}/email
-Authorization: Bearer {{ownerAccessToken}}
+POST {{baseUrl}}/booking/o1/{{emailBooking}}/email
+

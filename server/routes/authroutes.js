@@ -12,7 +12,7 @@ const router = express.Router();
  * @swagger
  * auth/login:
  *   post:
- *     summary: Log in and receive a JWT
+ *     summary: Log in and returns a userId
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -26,24 +26,15 @@ const router = express.Router();
  *               password: { type: string, example: password123 }
  *     responses:
  *       200:
- *         description: Returns a JWT 
+ *         description: Returns the userId 
  *       401:
  *         description: Invalid credentials
  */
 router.post('/login', (req, res) => {
-   //TODO: change harcode user with req
-   const user = {userId: 'u1'}
-   const accessToken = jwt.sign(user, DUMMY_SECRET_TOKEN)
-   res.json({accessToken: accessToken})
+
+   res.status(200).json({userId: "u1"})
 });
 
 
-// // --------------- Testing Purpose ---------- TO REMOVE
-// router.post('/login', (req, res) => {
-//    //TODO: change harcode user with req
-//    const user = {userId: 'o1'}
-//    const accessToken = jwt.sign(user, DUMMY_SECRET_TOKEN)
-//    res.json({accessToken: accessToken})
-// });
 
 module.exports = router;

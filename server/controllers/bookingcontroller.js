@@ -9,26 +9,24 @@ const EmailService = require('../services/emailservice.js');
 const BookingController = {
 
   async getMyBookings(req, res) {
-    const userId = req.user.userId;
-
+    const userId = req.params.userId;
     const bookings = await BookingModel.findBookingsByUser(userId);
-	console.log(bookings)
     res.status(200).json(BookingDto.responseBookings(bookings));
   },
 
   async deleteBooking(req, res) {
-
+    userId = req.params.userId;
     const booking = await BookingModel.findById(req.params.bookingId);
     if (!booking) return res.status(404).json({ error: 'Booking not found' });
 
-    if (booking.userId !== req.user.userId) {
+    if (booking.userId !== userId) {
       return res.status(403).json({ error: 'You can only cancel your own bookings' });
     }
 
     const slot = await SlotModel.findById(booking.slotId);
     const owner = slot ? await UserModel.findById(slot.ownerId) : null;
 
-    await BookingModel.delete(booking.bookingId, req.user.userId, slot.ownerId);
+    await BookingModel.delete(booking.bookingId, userId, slot.ownerId);
 
 
     let url = "";
@@ -42,13 +40,13 @@ const BookingController = {
   },
 
   async emailBookedUser(req, res) {
-  
+    userId = req.params.userId
     const booking = await BookingModel.findById(req.params.bookingId);
     if (!booking) return res.status(404).json({ error: 'Booking not found' });
 
     const slot = await SlotModel.findById(booking.slotId);
     if (!slot) return res.status(404).json({ error: 'Slot not found' });
-    if (slot.ownerId !== req.user.userId) {
+    if (slot.ownerId !== userId) {
       return res.status(403).json({ error: 'Only the slot owner can email the booked user' });
     }
 	const bookedUser = await UserModel.findById(booking.userId);

@@ -310,7 +310,8 @@ async function showMyAppointmentsView() {
   `;
 
   try {
-    const appointments: Appointment[] = await apiCall('/bookings/me', { method: 'GET' });
+    const appointments: Appointment[] = await apiCall(`/booking/${localStorage.getItem('userId')}`, { method: 'GET'});
+
     const container = document.getElementById('appointments-container')!;
 
     if (appointments && appointments.length > 0) {
