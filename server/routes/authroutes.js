@@ -1,18 +1,16 @@
 // ================== AUTH =======================
 // TODO: Implement login and Authorization
 // TODO: Implement bearer token and middleware
-const jwt = require('jsonwebtoken');
-const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '../../.env') });
-const DUMMY_SECRET_TOKEN = process.env.DUMMY_SECRET_TOKEN;
+
 const express = require('express');
 const router = express.Router();
+const UserController = require('../controllers/usercontroller');
 
 /**
  * @swagger
  * auth/login:
  *   post:
- *     summary: Log in and returns a userId
+ *     summary: Log in and receive the userId
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -26,15 +24,11 @@ const router = express.Router();
  *               password: { type: string, example: password123 }
  *     responses:
  *       200:
- *         description: Returns the userId 
+ *         description: Returns a userId string
  *       401:
  *         description: Invalid credentials
  */
-router.post('/login', (req, res) => {
-
-   res.status(200).json({userId: "u1"})
-});
-
+router.post('/login', UserController.login);
 
 
 module.exports = router;

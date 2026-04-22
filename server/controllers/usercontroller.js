@@ -59,6 +59,25 @@ const UserController = {
     return res.status(201).json(UserDto.responseUser(user));
 
   },
+  
+  async login(req, res){
+    const userEmail = req.body.email
+    const userPwd = req.body.pwd
+
+    if(typeof userEmail !== 'string' || userEmail.trim() === '') {
+      return res.status(400).json("Must include email")
+    }
+    if(typeof userPwd !== 'string' || userPwd.trim() === '') {
+      return res.status(400).json("Must include email")
+    }
+    
+    const user = await UserModel.findByEmail(userEmail)
+
+    if(user.pwd !== userPwd) return res.status(401).json("Invalid Credentials")
+    
+    res.status(200).json(user.userId)
+
+  },
 }
 
 module.exports = UserController;

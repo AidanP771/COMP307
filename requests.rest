@@ -194,3 +194,12 @@ POST {{baseUrl}}/booking/o1/{{emailBooking}}/email
 ###
 GET {{baseUrl}}/user/u1
 
+
+###
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "seb@mail.mcgill.ca",
+  "pwd": "123456"
+}
