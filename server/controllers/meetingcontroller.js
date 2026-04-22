@@ -9,7 +9,7 @@ const MeetingRequestController = {
   
   async create(req, res) {
 
-    const me = await UserModel.findById(req.user.userId);
+    const me = await UserModel.findById(req.params.userId);
 
     // ========== VALIDATION ================
     const { ownerEmail,title, message, date, startTime, endTime } = req.body ?? {};
@@ -44,7 +44,7 @@ const MeetingRequestController = {
 
 
   async getMe(req, res) {
-    const user = await UserModel.findById(req.user.userId);
+    const user = await UserModel.findById(req.params.userId);
 
     meetingIds = user.requestMeetingIds
   
@@ -63,12 +63,12 @@ const MeetingRequestController = {
   },
 
   async decline(req, res) {
+   
+    const r = await MeetingModel.findById(req.params.meetingId);
+    if (!r) return res.status(409).json("Meeting Already Declined");
+    if (r.ownerId !== req.params.userId) return res.status(403).json({ error: 'Only the addressed owner can decline' });
 
-    const r = await MeetingModel.findById(req.params.requestId);
-    if (!r) return res.status(204).json("Meeting Already Declined");
-    if (r.ownerId !== req.user.userId) return res.status(403).json({ error: 'Only the addressed owner can decline' });
-
-    const declined = await MeetingModel.decline(req.params.requestId);
+    const declined = await MeetingModel.decline(req.params.meetingId);
 
     oDeclined = await UserModel.enrichOwnerName(declined);
     uDeclined = await UserModel.enrichUserName(declined);
@@ -86,11 +86,11 @@ const MeetingRequestController = {
   },
 
   async accept(req, res) {
-    const r = await MeetingModel.findById(req.params.requestId);
+    const r = await MeetingModel.findById(req.params.meetingId);
     if (!r) return res.status(404).json({ error: 'Meeting not found' });
-    if (r.ownerId !== req.user.userId) return res.status(403).json({ error: 'Only the addressed owner can accept' });
+    if (r.ownerId !== req.params.userId) return res.status(403).json({ error: 'Only the addressed owner can accept' });
 
-    const accepted = await MeetingModel.accept(req.params.requestId);
+    const accepted = await MeetingModel.accept(req.params.meetingId);
     
 
     oAccepted = await UserModel.enrichOwnerName(accepted);

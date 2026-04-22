@@ -51,8 +51,7 @@ Content-Type: application/json
 }
 ###
 // ==================== MEETING APIS ===========================
-POST {{baseUrl}}/meeting/create
-Authorization: Bearer {{accessToken}}
+POST {{baseUrl}}/meeting/u1/create
 Content-Type: application/json
 
 {
@@ -66,22 +65,15 @@ Content-Type: application/json
 
 ###
 
-GET {{baseUrl}}/meeting/me
-Authorization: Bearer {{accessToken}}
-
-
-###
-GET {{baseUrl}}/meeting/me
-Authorization: Bearer {{ownerAccessToken}}
+GET {{baseUrl}}/meeting/u1
 
 ###
 @meetingId = sdnkzhnbmo81uyde
-POST {{baseUrl}}/meeting/{{meetingId}}/decline
-Authorization: Bearer {{ownerAccessToken}}
+POST {{baseUrl}}/meeting/o1/{{meetingId}}/decline
 
 ###
 @acceptMeetingId = ygkoy02tmo947qmg
-POST {{baseUrl}}/meeting/{{acceptMeetingId}}/accept
+POST {{baseUrl}}/meeting/o1/{{acceptMeetingId}}/accept
 Authorization: Bearer {{ownerAccessToken}}
 
 

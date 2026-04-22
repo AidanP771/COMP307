@@ -39,10 +39,6 @@ router.get('/:userId', BookingController.getMyBookings);
  *         name: userId
  *         required: true
  *         schema: { type: string }
- *      - in: path
- *        name: bookingId
- *        required: true
- *        schema: {type: string}
  *     responses:
  *       200:
  *         description: Booking cancelled. Response body is a `url` URL string for notifying the slot owner.

@@ -5,7 +5,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * meeting/create:
+ * meeting/{userId}/create:
  *   post:
  *     summary: User sends a meeting request to an owner
  *     description: >
@@ -44,11 +44,11 @@ const router = express.Router();
  *       400: { description: Validation error or self-request }
  *       404: { description: Owner not found }
  */
-router.post('/create', authenticate, meetingController.create);
+router.post('/:userId/create', meetingController.create);
 
 /**
  * @swagger
- * meeting/me:
+ * meeting/{userId}:
  *   get:
  *     summary: A user/owner will view their meeting requests. The user sees the requests they sent. An owner sees the requests they received 
  *     tags: [Meeting]
@@ -56,12 +56,12 @@ router.post('/create', authenticate, meetingController.create);
  *       200: 
  *          description: List of the caller's requests
  */
-router.get('/me', authenticate, meetingController.getMe);
+router.get('/:userId', meetingController.getMe);
 
 
 /**
  * @swagger
- * meeting/{meetingId}/decline:
+ * meeting/{userId}/{meetingId}/decline:
  *   post:
  *     summary: Owner declines a meeting request and emails the user about. The meeting request is removed from both the user and owner's information
  *     tags: [Meeting]
@@ -82,20 +82,21 @@ router.get('/me', authenticate, meetingController.getMe);
  *                      type: string
  *                      format: uri
  *                      example: "mailto:carol@mcgill.ca?subject=New+meeting+request+from+Alice+Smith&body=..."
- *       204: { description: Meeting already declined }
+ *       409: { description: Meeting already declined }
  *       403: 
  *          description: Only the addressed owner can decline
  *          content:
  *              application/json:
  *              schema: { $ref: '#/components/schemas/Error' }
+ *      
  *              
  */
-router.post('/:requestId/decline', authenticate, meetingController.decline);
+router.post('/:userId/:meetingId/decline', meetingController.decline);
 
 
 /**
  * @swagger
- * meeting/{meetingId}/accept:
+ * meeting/{userId}/{meetingId}/accept:
  *   post:
  *     summary: Owner accepts a meeting request and emails the user about. The meeting request is removed from both the user and owner's information. A booking is added to both the user and owner's information
  *     tags: [Meeting]
@@ -128,7 +129,7 @@ router.post('/:requestId/decline', authenticate, meetingController.decline);
  *              schema: { $ref: '#/components/schemas/Error' }
  *              
  */
-router.post('/:requestId/accept', authenticate, meetingController.accept);
+router.post('/:userId/:requestId/accept', meetingController.accept);
 
 
 /**
