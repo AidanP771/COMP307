@@ -33,7 +33,7 @@ const router = express.Router();
  *       401:
  *         description: Unauthorized
  */
-router.get('/active', authenticate, UserController.getActiveOwners);
+router.get('/active', UserController.getActiveOwners);
 
 
 

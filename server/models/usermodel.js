@@ -16,11 +16,11 @@ const UserModel = {
     return db.collection('users').findOne({email: needle});
   },
 
-  async findOwnerByPublicId(public_id) {
+  async findOwnerByPublicId(publicId) {
     const db = getDB();
 
     const ownerRecord = await db.collection('owners')
-      .findOne({ public_id });
+      .findOne({ publicId });
 
     if (!ownerRecord) return null;
 

@@ -1,9 +1,12 @@
 class SlotResponseDto {
   constructor(slot) {
+    this.slotId = slot.slotId;
     this.title   = slot.title;
     this.date        = slot.date;
     this.startTime   = slot.startTime;
     this.endTime     = slot.endTime;
+    this.isBooked = slot.isBooked;
+    this.isPrivate = slot.isPrivate;
   }
  
   static responseSlot(dbSlot){
@@ -34,6 +37,7 @@ class SlotResponseDto {
       const slotBookings = bookingsBySlotId.get(slot.slotId) ?? [];
       
       return {
+        slotId:    slot.slotId,
         title:     slot.title,
         date:      slot.date,
         startTime: slot.startTime,

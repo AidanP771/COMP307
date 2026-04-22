@@ -6,10 +6,12 @@ export default defineConfig({
   server: {
     host: true,
     port: 3000,
-
-    
     hmr: false,
+    watch: null,
 
+    allowedHosts: [
+      'winter2026-comp307-group09.cs.mcgill.ca'
+    ],
     
     proxy: {
       '/auth': {

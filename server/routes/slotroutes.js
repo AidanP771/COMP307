@@ -45,6 +45,7 @@ router.post('/create', authenticate, SlotController.create);
  *               items:
  *                 type: object
  *                 properties:
+ *                   slotId:    {type: string }
  *                   title:     { type: string }
  *                   date:      { type: string }
  *                   startTime: { type: string }
@@ -63,20 +64,42 @@ router.post('/create', authenticate, SlotController.create);
  */
 router.get('/owned', authenticate, SlotController.getOwned);
 
+/**
+ * @swagger
+ * slot/activate:
+ *   put:
+ *     summary: Owner makes one of their slots active (public)
+ *     tags: [Slots]
+ *     requestBody:
+ *      required: true
+ *      content:
+ *          application/json:
+ *              schema:
+ *              type: object
+ *              required: [slotId]
+ *              properties:
+ *                  slotId:     { type: string }
+ *     responses:
+ *       200: { description: Slot activated }
+ *       403: { description: Forbidden – not the owner }
+ *       404: { description: Slot not found }
+ */
+router.put('/activate', authenticate, SlotController.activate);
+
 
 /**
  * @swagger
- * slot/{owner_id}:
+ * slot/{ownerId}:
  *   get:
  *     summary: A user can find all active unbooked slots for a specific owner
  *     tags: [Slots]
  *     parameters:
  *       - in: path
- *         name: owner_id
+ *         name: ownerId
  *         required: true
  *         schema:
  *           type: string
- *         description: The public_id of the owner
+ *         description: The publicId of the owner
  *         example: 3b185b17-7682-4f9e-990a-a1b415a20822
  *     responses:
  *       200:
@@ -90,7 +113,7 @@ router.get('/owned', authenticate, SlotController.getOwned);
  *       404:
  *         description: Owner not found
  */
-router.get('/:owner_id', authenticate, SlotController.getAvailableByOwner);
+router.get('/:ownerId', SlotController.getAvailableByOwner);
 
 
 

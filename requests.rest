@@ -155,7 +155,7 @@ Authorization: Bearer {{ownerAccessToken}}
 Content-Type: application/json
 
 {
-  "title"     : "Pop Quiz",
+  "title"     : "AHHH Quiz",
   "date"      : "2026-03-03",
   "startTime" : "9:00",
   "endTime"   : "13:00"
@@ -208,3 +208,13 @@ Content-Type: application/json
 
 
 ###
+PUT {{baseUrl}}/slot/activate
+Authorization: Bearer {{ownerAccessToken}}
+Content-Type: application/json
+
+{
+  "slotId": "pbmkd179mo9k571l"
+}
+###
+@publicId = d290f1ee-6c54-4b01-90e6-d701748f0851
+GET {{baseUrl}}/slot/{{publicId}}

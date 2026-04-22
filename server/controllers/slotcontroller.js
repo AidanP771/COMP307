@@ -7,7 +7,7 @@ const EmailService = require('../services/emailservice');
 const SlotController = {
 
   async getAvailableByOwner(req, res) {
-    const owner = await UserModel.findOwnerByPublicId(req.params.owner_id);
+    const owner = await UserModel.findOwnerByPublicId(req.params.ownerId);
     if (!owner) return res.status(404).json({ errors: ['Owner not found'] });
 
     const slots = await SlotModel.getActiveByOwner(owner.userId);
@@ -50,6 +50,17 @@ const SlotController = {
     const bookings = await BookingModel.getListBooking(bookingIds);
     
     res.status(200).json(SlotDto.responseSlotsAndBooking(slots, bookings));
+  },
+
+  async activate(req, res) {
+    const slot = await SlotModel.findById(req.body.slotId);
+    if (!slot) return res.status(404).json({ error: 'Slot not found' });
+    if (slot.ownerId !== req.user.userId) {
+      return res.status(403).json({ error: 'Only the owner can activate this slot' });
+    }
+
+    const updated = await SlotModel.setActive(slot.slotId);
+    res.json(SlotDto.responseSlot(updated));
   },
 };
 

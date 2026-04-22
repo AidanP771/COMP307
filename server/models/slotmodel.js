@@ -5,13 +5,7 @@ const SlotModel = {
   async findById(slotId) {
     const db = getDB();
     return await db.collection('slots')
-      .findOne({ slot_id: Number(slotId) }) ?? null;
-  },
-
-  async findByPublicId(public_id) {
-    const db = getDB();
-    return await db.collection('slots')
-      .findOne({ public_id }) ?? null;
+      .findOne({slotId}) ?? null;
   },
 
   async getActiveByOwner(ownerId) {
@@ -19,8 +13,8 @@ const SlotModel = {
     return await db.collection('slots')
       .find({
         ownerId: ownerId,
-        is_private: false,
-        $expr: { $lt: ["$curr_user", "$user_limit"] }
+        isPrivate: false,
+        isBooked: false,
       })
       .toArray();
   },
@@ -61,6 +55,22 @@ const SlotModel = {
     
     return newSlot
   },
+
+async setActive(slotId) {
+    const db = getDB();
+    const slot = await db.collection('slots').findOne({ slotId });
+    if (!slot) return null;
+    await db.collection('slots').updateOne(
+      { slotId },
+      { $set: { isPrivate: false } }
+    );
+    await db.collection('owners').updateOne(
+      { userId: slot.ownerId },
+      { $pull: { privateSlots: slotId }, $push: { activeSlots: slotId } }
+    );
+    return { ...slot, isPrivate: false };
+  },
+
 
 
 // ================== TO IMPLEMENT =============================
