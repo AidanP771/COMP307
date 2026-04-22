@@ -41,6 +41,23 @@ const BookingController = {
     res.status(200).json(url);
   },
 
+  async emailBookedUser(req, res) {
+  
+    const booking = await BookingModel.findById(req.params.bookingId);
+    if (!booking) return res.status(404).json({ error: 'Booking not found' });
+
+    const slot = await SlotModel.findById(booking.slotId);
+    if (!slot) return res.status(404).json({ error: 'Slot not found' });
+    if (slot.ownerId !== req.user.userId) {
+      return res.status(403).json({ error: 'Only the slot owner can email the booked user' });
+    }
+	const bookedUser = await UserModel.findById(booking.userId);
+    if (!bookedUser) return res.status(404).json({ error: 'Booked user not found' });
+
+    const url = EmailService.buildMailto(bookedUser.email, "","");
+    res.status(200).json(url);
+	
+},
 
 };
 

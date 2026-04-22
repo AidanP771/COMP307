@@ -184,11 +184,13 @@ async function handleBookingSubmit(form: HTMLFormElement, professorName: string,
 
   try {
     const bookingData = {
-      professorName,
-      date,
-      time,
-      notes,
-      studentId: localStorage.getItem('userId') || 'u1', // Default to u1 if not set
+	     userId: localStorage.getItem('userId') || 'u1',
+	     ownerId: professorName,
+	     message: notes,
+	     title: 'Office Hours (test)',
+	     date: date,
+	     startTime: time,
+	     endTime: time,
     };
 
     await apiCall('/meeting/create', {

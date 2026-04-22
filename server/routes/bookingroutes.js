@@ -30,7 +30,7 @@ router.get('/me', authenticate, BookingController.getMyBookings);
  * booking/{bookingId}:
  *   delete:
  *     summary: User cancels their booking. The slot becomes available again and a mailto URL is returned for notifying the owner.
- *     tags: [Bookings]
+ *     tags: [Booking]
  *     parameters:
  *       - in: path
  *         name: bookingId
@@ -46,6 +46,30 @@ router.get('/me', authenticate, BookingController.getMyBookings);
  *       404: { description: Booking not found }
  */
 router.delete('/:bookingId', authenticate, BookingController.deleteBooking);
+
+/**
+ * @swagger
+ * booking/{bookingId}/email:
+ *   post:
+ *     summary: Slot owner composes an email to the user who booked the slot. Returns a mailto URL.
+ *     tags: [Booking]
+ *     parameters:
+ *       - in: path
+ *         name: bookingId
+ *         required: true
+ *         schema: { type: string }
+ *     responses:
+ *       200:
+ *         description: A 'url' mailto URL string addressed to the booked user.
+ *         content:
+ *           application/json:
+ *             schema: { type: string }
+ *       403: { description: Forbidden – not the slot owner }
+ *       404: { description: Booking, slot, or booked user not found }
+ */
+router.post('/:bookingId/email', authenticate, BookingController.emailBookedUser);
+
+
 
 // ================== Swagger Schemas =======================
 

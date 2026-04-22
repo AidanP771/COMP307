@@ -243,3 +243,8 @@ Authorization: Bearer {{accessToken}}
 
 DELETE {{baseUrl}}/booking/{{deleteBooking}}
 Authorization: Bearer {{accessToken}}
+
+### 
+@emailBooking = p0koz4f1moa48dxm
+POST {{baseUrl}}/booking/{{emailBooking}}/email
+Authorization: Bearer {{ownerAccessToken}}
