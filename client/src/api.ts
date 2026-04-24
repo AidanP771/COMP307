@@ -1,12 +1,12 @@
 /**
  * API utility for communicating with the backend server
- * Backend runs on http://127.0.0.1:3000
- * Vite dev server proxies requests to /auth, /bookings, /users to the backend
+ * Configure API target via VITE_API_BASE_URL:
+ * - local dev: leave empty to use Vite proxy
+ * - production: set to remote backend URL
  */
 
-const API_BASE_URL = typeof window !== 'undefined' && window.location.hostname !== '127.0.0.1' 
-  ? 'https://winter2026-comp307-group09.cs.mcgill.ca'
-  : '';
+const configuredApiBase = (import.meta.env.VITE_API_BASE_URL || '').trim();
+const API_BASE_URL = configuredApiBase.replace(/\/$/, '');
 
 interface FetchOptions extends RequestInit {
   headers?: Record<string, string>;
@@ -23,7 +23,7 @@ export async function apiCall(
   };
 
   // Add auth token if it exists
-  const token = localStorage.getItem('accessToken');
+  const token = localStorage.getItem('accessToken') || localStorage.getItem('token');
   if (token) {
     defaultHeaders['Authorization'] = `Bearer ${token}`;
   }

@@ -28,6 +28,7 @@ const { authenticate }  = require('./auth');
  *         description: Forbidden – user role required
  */
 router.get('/:userId', BookingController.getMyBookings);
+router.get('/:userId/appointments', BookingController.getMyAppointments);
 /**
  * @swagger
  * booking/{userId}/{bookingId}:

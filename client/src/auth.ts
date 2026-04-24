@@ -1,3 +1,5 @@
+import { auth } from './api';
+
 const loginForm = document.querySelector('form');
 
 loginForm?.addEventListener('submit', async (e) => {
@@ -19,18 +21,18 @@ loginForm?.addEventListener('submit', async (e) => {
     
 
     try {
-        const res = await fetch('/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-        });
+        const data = await auth.login(email, password);
+        const userId = typeof data === 'string' ? data : data?.userId;
+        const token = typeof data === 'object' ? data?.token : null;
 
-        if (!res.ok) throw new Error('Login failed');
+        if (!userId) {
+            throw new Error('Login response missing userId');
+        }
 
-        const data = await res.json();
-
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('userId', data.userId);
+        if (token) {
+            localStorage.setItem('token', token);
+        }
+        localStorage.setItem('userId', userId);
         localStorage.setItem('userEmail', email);
         localStorage.setItem('userRole', isOwner ? 'owner' : 'user');
 
@@ -38,6 +40,7 @@ loginForm?.addEventListener('submit', async (e) => {
 
     } catch (err) {
         console.error(err);
-        alert("Login failed");
+        const message = err instanceof Error ? err.message : 'Login failed';
+        alert(`Login failed: ${message}`);
     }
 });

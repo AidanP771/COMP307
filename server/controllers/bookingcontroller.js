@@ -8,6 +8,12 @@ const EmailService = require('../services/emailservice.js');
 
 const BookingController = {
 
+  async getMyAppointments(req, res) {
+    const userId = req.params.userId;
+    const appointments = await BookingModel.findAppointmentsByUser(userId);
+    res.status(200).json(appointments);
+  },
+
   async getMyBookings(req, res) {
     const userId = req.params.userId;
     const bookings = await BookingModel.findBookingsByUser(userId);

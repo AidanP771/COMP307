@@ -122,6 +122,41 @@ async findBookingsByUser(userId) {
 	}));
 },
 
+async findAppointmentsByUser(userId) {
+	const db = getDB();
+
+	const confirmedBookings = await BookingModel.findBookingsByUser(userId);
+	const confirmedAppointments = confirmedBookings.map((booking) => ({
+		appointmentId: booking.bookingId,
+		professorName: booking.owner?.name ?? null,
+		date: booking.slot?.date ?? null,
+		startTime: booking.slot?.startTime ?? null,
+		endTime: booking.slot?.endTime ?? null,
+		status: 'confirmed',
+		type: 'booking',
+	}));
+
+	const pendingMeetings = await db.collection('meetings').find({ userId }).toArray();
+	const pendingAppointments = await Promise.all(pendingMeetings.map(async (meeting) => {
+		const owner = await db.collection('users').findOne({ userId: meeting.ownerId }) ?? null;
+		return {
+			appointmentId: meeting.meetingId,
+			professorName: owner?.name ?? null,
+			date: meeting.date ?? null,
+			startTime: meeting.startTime ?? null,
+			endTime: meeting.endTime ?? null,
+			status: 'pending',
+			type: 'meeting-request',
+		};
+	}));
+
+	return [...confirmedAppointments, ...pendingAppointments].sort((a, b) => {
+		const aKey = `${a.date ?? ''} ${a.startTime ?? ''}`;
+		const bKey = `${b.date ?? ''} ${b.startTime ?? ''}`;
+		return aKey.localeCompare(bKey);
+	});
+},
+
 };
 
 module.exports = BookingModel;

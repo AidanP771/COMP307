@@ -1,4 +1,9 @@
 {
+  "scripts": {
+    "start:local": "bash ./start-local.sh",
+    "start:local:remote": "bash -lc 'START_MODE=remote LOAD_LOCAL_ENV=1 bash ./start-local.sh'",
+    "start:local:db-local": "bash -lc 'LOAD_LOCAL_ENV=0 MONGO_URI=mongodb://127.0.0.1:27017 DB_NAME=comp307 bash ./start-local.sh'"
+  },
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "dotenv": "^17.4.2",

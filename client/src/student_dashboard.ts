@@ -8,14 +8,13 @@ import { apiCall } from './api';
 // --- Interfaces ---
 
 interface Appointment {
-  _id: string;
-  studentId: string;
-  slotId: string;
+  appointmentId: string;
   professorName: string;
   date: string;
   startTime: string;
   endTime: string;
   status: string;
+  type: string;
 }
 
 const PROFESSOR_EMAILS: Record<string, string> = {
@@ -216,7 +215,7 @@ async function handleBookingSubmit(form: HTMLFormElement, professorName: string,
       body: JSON.stringify(bookingData),
     });
 
-    alert('Appointment booked successfully!');
+    alert('Request sent successfully! It will appear in My Appointments as pending.');
     modal.remove();
     // Refresh appointments view if we're on that page
     if (document.querySelector('.sidebar-link.active')?.textContent?.trim() === 'My Appointments') {
@@ -328,7 +327,8 @@ async function showMyAppointmentsView() {
   `;
 
   try {
-    const appointments: Appointment[] = await apiCall(`/booking/${localStorage.getItem('userId')}`, { method: 'GET'});
+    const userId = localStorage.getItem('userId');
+    const appointments: Appointment[] = await apiCall(`/booking/${userId}/appointments`, { method: 'GET'});
 
     const container = document.getElementById('appointments-container')!;
 
@@ -343,7 +343,7 @@ async function showMyAppointmentsView() {
             <p style="margin:5px 0;"><strong>Time:</strong>
               ${apt.startTime} - ${apt.endTime}</p>
             <p style="margin:5px 0;"><strong>Status:</strong>
-              <span style="color:${apt.status === 'confirmed' ? 'green' : 'orange'};">
+              <span style="color:${apt.status === 'confirmed' ? 'green' : 'orange'}; text-transform: capitalize;">
                 ${apt.status}
               </span>
             </p>
